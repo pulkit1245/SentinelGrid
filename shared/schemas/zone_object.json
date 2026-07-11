@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ZoneObject",
+  "type": "object",
+  "required": ["id", "plant_id", "name", "hazard_class", "current_risk_score"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "plant_id": { "type": "string", "format": "uuid" },
+    "name": { "type": "string" },
+    "hazard_class": { "type": "string", "enum": ["gas", "thermal", "mechanical", "confined_space", "general"] },
+    "polygon_geojson": { "type": ["object", "null"] },
+    "current_risk_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "active_permit_count": { "type": "integer", "minimum": 0 },
+    "active_alert_count": { "type": "integer", "minimum": 0 },
+    "sensors": { "type": "array" }
+  }
+}

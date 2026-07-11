@@ -1,0 +1,1 @@
+# SentinelGrid core package

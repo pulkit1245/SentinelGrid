@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SensorReadingEvent",
+  "type": "object",
+  "required": ["sensor_id", "zone_id", "sensor_type", "value", "unit", "recorded_at"],
+  "properties": {
+    "sensor_id": { "type": "string", "format": "uuid" },
+    "zone_id": { "type": "string", "format": "uuid" },
+    "sensor_type": { "type": "string", "enum": ["gas", "temperature", "pressure", "vibration"] },
+    "value": { "type": "number" },
+    "unit": { "type": "string", "examples": ["ppm", "celsius", "bar", "mm/s"] },
+    "recorded_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WSMessageEnvelope",
+  "type": "object",
+  "required": ["type", "timestamp", "payload"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["zone_risk_update", "new_alert", "alert_confirmed", "permit_created", "permit_revoked", "cv_event", "heartbeat"]
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "payload": { "type": "object" }
+  }
+}
