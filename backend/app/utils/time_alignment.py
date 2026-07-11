@@ -1,43 +1,98 @@
-from __future__ import annotations
+"""
+Time-alignment across heterogeneous sample rates.
 
-"""Time alignment utilities for the enrichment worker.
+Sensor readings arrive at ~1Hz-equivalent, CV occupancy counts might arrive
+every 2-5 fps (very different real rate) and once-off permit/shift events
+arrive sporadically. To correlate them (e.g. "gas trend AND cv occupancy AND
+permit active, all true at the same moment") everything needs to land on a
+common time grid first.
 
-NOTE: Full implementation owned by Member 2 (backend/app/workers/tasks/enrichment_task.py).
-This module provides the stub/interface so Member 1's ingestion service can import it.
+This module buckets raw events by (zone_id, bucket_start) at a configurable
+grid resolution (default 60s, matching the smallest rolling-window size used
+downstream) and reduces multiple readings landing in the same bucket to a
+single representative value per sensor_type.
 """
 
+from collections import defaultdict
+from dataclasses import dataclass
+from typing import Dict, Iterable, List, Optional
 
-def bucket_to_grid(timestamp_iso: str, bucket_seconds: int = 60) -> str:
-    """Round a timestamp down to the nearest bucket boundary.
+DEFAULT_GRID_S = 60.0
 
-    Args:
-        timestamp_iso: ISO 8601 timestamp string.
-        bucket_seconds: Bucket size in seconds (default 60s = 1-minute grid).
 
-    Returns:
-        ISO 8601 timestamp of the bucket start.
+@dataclass(frozen=True)
+class GridBucket:
+    zone_id: str
+    bucket_start_s: float
+    grid_s: float
+
+    @property
+    def bucket_end_s(self) -> float:
+        return self.bucket_start_s + self.grid_s
+
+
+def bucket_start(sim_time_s: float, grid_s: float = DEFAULT_GRID_S) -> float:
+    return (sim_time_s // grid_s) * grid_s
+
+
+def align_events(events: Iterable[dict], grid_s: float = DEFAULT_GRID_S,
+                  reducer: str = "mean") -> Dict[GridBucket, Dict[str, float]]:
     """
-    from datetime import datetime, timezone
-    dt = datetime.fromisoformat(timestamp_iso.replace("Z", "+00:00"))
-    bucket_start = dt.timestamp() - (dt.timestamp() % bucket_seconds)
-    return datetime.fromtimestamp(bucket_start, tz=timezone.utc).isoformat()
+    Buckets a stream of sensor_reading-shaped events
+    ({zone_id, sensor_type, value, sim_time_s}) onto the common grid.
 
+    Multiple readings in the same (zone, bucket, sensor_type) are reduced
+    via `reducer` ("mean" | "last" | "max"). Returns:
+        {GridBucket: {sensor_type: reduced_value, ...}, ...}
 
-def compute_trend_slope(values: list[float], timestamps: list[float]) -> float:
-    """Simple linear regression slope for a list of (value, unix_timestamp) pairs.
-
-    Returns the slope in units/second. Positive = increasing trend.
+    Non-sensor events (permit/shift/cv) are handled by align_flag_events()
+    below since they're presence-in-window rather than numeric-reduce.
     """
-    if len(values) < 2:
-        return 0.0
+    raw: Dict[GridBucket, Dict[str, list]] = defaultdict(lambda: defaultdict(list))
 
-    n = len(values)
-    sum_x = sum(timestamps)
-    sum_y = sum(values)
-    sum_xy = sum(x * y for x, y in zip(timestamps, values))
-    sum_x2 = sum(x ** 2 for x in timestamps)
+    for ev in events:
+        if ev.get("event_type") != "sensor_reading":
+            continue
+        zone_id = ev["zone_id"]
+        sensor_type = ev["sensor_type"]
+        t = ev["sim_time_s"]
+        bkt = GridBucket(zone_id, bucket_start(t, grid_s), grid_s)
+        raw[bkt][sensor_type].append(ev["value"])
 
-    denom = n * sum_x2 - sum_x ** 2
-    if denom == 0:
-        return 0.0
-    return (n * sum_xy - sum_x * sum_y) / denom
+    out: Dict[GridBucket, Dict[str, float]] = {}
+    for bkt, sensor_values in raw.items():
+        out[bkt] = {}
+        for sensor_type, values in sensor_values.items():
+            if reducer == "mean":
+                out[bkt][sensor_type] = sum(values) / len(values)
+            elif reducer == "last":
+                out[bkt][sensor_type] = values[-1]
+            elif reducer == "max":
+                out[bkt][sensor_type] = max(values)
+            else:
+                raise ValueError(f"Unknown reducer '{reducer}'")
+    return out
+
+
+def align_flag_events(events: Iterable[dict], grid_s: float = DEFAULT_GRID_S,
+                       event_types: Optional[List[str]] = None) -> Dict[GridBucket, List[dict]]:
+    """
+    Buckets non-numeric events (permit_issued, cv detections, etc.) onto the
+    same grid so a downstream feature builder can ask "was there a
+    permit_issued event for this zone in this bucket?" without re-deriving
+    bucket boundaries.
+    """
+    out: Dict[GridBucket, List[dict]] = defaultdict(list)
+    for ev in events:
+        et = ev.get("event_type")
+        if event_types is not None and et not in event_types:
+            continue
+        if et == "sensor_reading":
+            continue
+        zone_id = ev.get("zone_id")
+        if zone_id is None:
+            continue  # plant-wide events (e.g. shift_boundary) handled separately
+        t = ev["sim_time_s"]
+        bkt = GridBucket(zone_id, bucket_start(t, grid_s), grid_s)
+        out[bkt].append(ev)
+    return out

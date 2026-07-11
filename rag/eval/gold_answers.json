@@ -1,0 +1,27 @@
+[
+  {
+    "question": "What is the minimum radius for prohibiting hot work near a degassing operation?",
+    "expected_answer_snippet": "15-meter radius",
+    "expected_citation": "OISD-STD-105 Section 4.4"
+  },
+  {
+    "question": "What is the penalty for contravention of the Factories Act according to Section 92?",
+    "expected_answer_snippet": "imprisonment for a term which may extend to two years or with fine which may extend to one lakh rupees",
+    "expected_citation": "Factories Act Section 92"
+  },
+  {
+    "question": "What was the precursor factor involving gas sensors in the June 2025 Vizag incident?",
+    "expected_answer_snippet": "slow, positive trend slope in CO/flammable gases over the preceding 45 minutes",
+    "expected_citation": "INC-2025-06-08"
+  },
+  {
+    "question": "What must the LEL reading be before issuing a hot work permit?",
+    "expected_answer_snippet": "strictly 0%",
+    "expected_citation": "OISD-STD-105 Section 4.2"
+  },
+  {
+    "question": "In the tank farm vapor ignition near miss, what operation created the vapor cloud?",
+    "expected_answer_snippet": "Concurrent degassing operation in the adjacent tank",
+    "expected_citation": "INC-2024-11-12"
+  }
+]

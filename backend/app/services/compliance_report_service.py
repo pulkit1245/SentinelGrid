@@ -1,53 +1,77 @@
-from __future__ import annotations
-
-import logging
-import uuid
-from datetime import datetime, timezone
-
-from app.repositories.alert_repository import AlertRepository
-
-logger = logging.getLogger(__name__)
-
+import json
+from typing import Dict, Any
+from datetime import datetime
 
 class ComplianceReportService:
-    """Generates auto-drafted OISD/DGMS-format incident reports for confirmed alerts."""
-
-    def __init__(self, alert_repo: AlertRepository) -> None:
-        self.alert_repo = alert_repo
-
-    async def generate_report(self, alert_id: uuid.UUID) -> dict:
-        alert = await self.alert_repo.get_alert(alert_id)
-        if not alert:
-            raise ValueError(f"Alert {alert_id} not found")
-        if not alert.confirmed_by:
-            raise ValueError("Alert must be confirmed before generating a compliance report")
-
-        # TODO(Member 3): LLM-filled template logic goes here
-        # For now, return a structured draft that can be rendered as PDF
-        report = {
-            "report_type": "OISD-DGMS Incident Report",
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "alert_id": str(alert_id),
-            "incident_details": {
-                "severity": alert.severity,
-                "triggered_at": alert.triggered_at.isoformat(),
-                "confirmed_at": alert.confirmed_at.isoformat() if alert.confirmed_at else None,
-                "description": alert.description or alert.title,
-                "causal_chain": alert.graph_path,
-            },
-            "regulatory_references": [
-                "OISD Standard 118 — Instrumentation",
-                "DGMS Circular 2019-04 — Hot Work Safety",
-                "Factories Act 1948, Section 41B",
-            ],
-            "corrective_actions": [
-                "Suspend all hot-work operations in affected zone immediately",
-                "Evacuate non-essential personnel per emergency plan",
-                "Investigate gas drift source and isolate if possible",
-                "Submit incident notification to DGMS within 24 hours",
-            ],
-            "status": "draft",
-        }
-
-        logger.info("Compliance report generated", extra={"alert_id": str(alert_id)})
-        return report
+    """
+    Extracts data signatures from an alert's graph_path and fills an OISD/DGMS 
+    statutory submission template (PDF/HTML generation).
+    """
+    
+    def generate_report_html(self, alert_id: str, alert_data: Dict[str, Any], audit_violations: list) -> str:
+        """
+        Generates a structured HTML report that can be converted to PDF.
+        """
+        now_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        
+        html_template = f"""
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }}
+                h1 {{ color: #b30000; border-bottom: 2px solid #b30000; padding-bottom: 5px; }}
+                h2 {{ color: #333; margin-top: 30px; }}
+                .meta {{ background: #f4f4f4; padding: 15px; border-radius: 5px; }}
+                .violation {{ background: #fff3f3; border-left: 4px solid #cc0000; padding: 10px; margin-bottom: 10px; }}
+                .graph-data {{ background: #f0f8ff; padding: 15px; font-family: monospace; white-space: pre-wrap; }}
+            </style>
+        </head>
+        <body>
+            <h1>SentinelGrid: Statutory Incident / Near-Miss Report</h1>
+            
+            <div class="meta">
+                <p><strong>Report ID:</strong> {alert_id}</p>
+                <p><strong>Generated At:</strong> {now_str}</p>
+                <p><strong>Severity:</strong> {alert_data.get('severity', 'UNKNOWN').upper()}</p>
+                <p><strong>Zone ID:</strong> {alert_data.get('zone_id', 'UNKNOWN')}</p>
+            </div>
+            
+            <h2>1. Incident Summary</h2>
+            <p>An automated safety halt was triggered due to compound risk detection.</p>
+            
+            <h2>2. Regulatory Violations Detected</h2>
+        """
+        
+        if not audit_violations:
+            html_template += "<p>No explicit statutory rule violations detected (preventative trigger).</p>"
+        else:
+            for v in audit_violations:
+                html_template += f"""
+                <div class="violation">
+                    <p><strong>Rule:</strong> {v.get('rule')}</p>
+                    <p><strong>Violation:</strong> {v.get('violation')}</p>
+                    <p><strong>Corrective Action:</strong> {v.get('corrective_action')}</p>
+                </div>
+                """
+                
+        html_template += """
+            <h2>3. Automated Graph Evidence Snapshot</h2>
+            <div class="graph-data">
+        """
+        
+        # Dump graph path as formatted JSON for evidence
+        html_template += json.dumps(alert_data.get("graph_path", {}), indent=2)
+        
+        html_template += """
+            </div>
+            
+            <p style="margin-top: 40px; font-size: 12px; color: #888;">
+                * This report is auto-generated by the SentinelGrid Compliance Audit Agent.
+            </p>
+        </body>
+        </html>
+        """
+        
+        return html_template
+        
+compliance_report_service = ComplianceReportService()

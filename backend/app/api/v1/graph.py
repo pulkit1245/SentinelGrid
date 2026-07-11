@@ -1,32 +1,27 @@
-from __future__ import annotations
+from fastapi import APIRouter, HTTPException, Path
+from typing import Dict, Any
 
-import uuid
-from typing import Annotated
+# We need to import from our networkx fallback for the hackathon MVP
+from graph.networkx_fallback import fallback_graph
 
-from fastapi import APIRouter, Depends
+router = APIRouter(prefix="/api/v1/graph", tags=["Graph"])
 
-from app.middlewares.auth_middleware import get_current_user
-from app.schemas.auth_schema import UserInToken
-
-router = APIRouter(prefix="/graph")
-
-
-@router.get("/zones/{zone_id}")
-async def get_zone_graph(
-    zone_id: uuid.UUID,
-    current_user: Annotated[UserInToken, Depends(get_current_user)],
-):
-    """Return graph data for a zone — nodes and edges from the Plant Risk Graph.
-
-    NOTE: Full implementation is owned by Member 3 (graph_builder.py / pattern_queries.py).
-    This stub returns a placeholder so the frontend graph visualisation can render.
+@router.get("/zone/{zone_id}/path")
+async def get_visual_lineage(zone_id: str = Path(..., title="The UUID of the zone")):
     """
-    # TODO(Member 3): wire to graph_client.get_zone_subgraph(zone_id)
-    return {
-        "zone_id": str(zone_id),
-        "nodes": [
-            {"id": str(zone_id), "type": "Zone", "label": "Zone"},
-        ],
-        "edges": [],
-        "note": "Full graph data available once Member 3's graph module is integrated.",
-    }
+    Extracts the overlapping nodes (Permit, Sensor, Shift, Worker) responsible for an active alert.
+    Transforms raw graph sub-networks into readable JSON payloads for the frontend cockpit dashboard.
+    """
+    try:
+        # Query the networkx fallback client for the path around this zone
+        payload = fallback_graph.get_path_for_alert(zone_id)
+        
+        if not payload or not payload.get("nodes"):
+            raise HTTPException(status_code=404, detail="Zone not found in graph or has no relationships.")
+            
+        return {
+            "status": "success",
+            "data": payload
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
