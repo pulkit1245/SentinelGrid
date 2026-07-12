@@ -11,6 +11,7 @@ from app.models.base import get_db
 from app.repositories.permit_repository import PermitRepository
 from app.schemas.auth_schema import UserInToken
 from app.schemas.permit_schema import PermitCreate, PermitResponse
+from app.services.ingestion_service import IngestionService
 from app.services.permit_validation_service import PermitValidationService
 
 router = APIRouter(prefix="/permits")
@@ -51,6 +52,30 @@ async def create_permit(
             "status": "active",
         }
     )
+
+    await IngestionService.publish_raw_event(
+        {
+            "event_type": "permit_issued",
+            "permit_id": str(permit.id),
+            "zone_id": str(permit.zone_id),
+            "permit_type": permit.permit_type,
+            "sim_time_s": permit.valid_from.timestamp(),
+        }
+    )
+
+    from app.api.v1.dashboard_ws import broadcast_event
+
+    await broadcast_event(
+        "permit_created",
+        {
+            "id": str(permit.id),
+            "zone_id": str(permit.zone_id),
+            "permit_type": permit.permit_type,
+            "status": permit.status,
+            "valid_from": permit.valid_from.isoformat(),
+            "valid_to": permit.valid_to.isoformat(),
+        },
+    )
     return permit
 
 
@@ -82,6 +107,22 @@ async def revoke_permit(
     if permit.status != "active":
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Permit is not active")
     updated = await repo.update_permit_status(permit_id, "revoked")
+
+    await IngestionService.publish_raw_event(
+        {
+            "event_type": "permit_closed",
+            "permit_id": str(permit_id),
+            "zone_id": str(permit.zone_id),
+            "sim_time_s": 0,
+        }
+    )
+
+    from app.api.v1.dashboard_ws import broadcast_event
+
+    await broadcast_event(
+        "permit_revoked",
+        {"id": str(permit_id), "zone_id": str(permit.zone_id), "status": "revoked"},
+    )
     return updated
 
 

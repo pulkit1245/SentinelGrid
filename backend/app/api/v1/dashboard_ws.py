@@ -110,7 +110,15 @@ async def dashboard_ws(websocket: WebSocket, token: str = ""):
             data = await websocket.receive_text()
             # Clients may send ping messages — just echo back
             if data == "ping":
-                await manager.send_personal(websocket, {"type": "pong"})
+                from datetime import datetime, timezone
+                await manager.send_personal(
+                    websocket,
+                    {
+                        "type": "pong",
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "payload": {},
+                    },
+                )
     except WebSocketDisconnect:
         pass
     finally:

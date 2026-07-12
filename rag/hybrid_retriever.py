@@ -9,12 +9,12 @@ class HybridRetriever:
     """
     Combines dense vector scoring with BM25 sparse token indices using Reciprocal Rank Fusion (RRF).
     """
-    def __init__(self, qdrant_url: str = "http://localhost:6333"):
-        self.dense_retriever = VectorDatabaseBuilder(qdrant_url=qdrant_url)
+    def __init__(self, qdrant_url: str = "http://localhost:6333", qdrant_path: str | None = None):
+        self.dense_retriever = VectorDatabaseBuilder(qdrant_url=qdrant_url, qdrant_path=qdrant_path)
         self.sparse_retriever = BM25SparseIndexer()
         
         # Load the mock BM25 index built by reindex.py
-        bm25_store = os.path.join(os.path.dirname(os.path.dirname(__file__)), "scripts", "bm25_store.json")
+        bm25_store = os.path.join(os.path.dirname(__file__), "scripts", "bm25_store.json")
         if os.path.exists(bm25_store):
             with open(bm25_store, 'r') as f:
                 chunks = json.load(f)

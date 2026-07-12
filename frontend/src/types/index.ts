@@ -8,6 +8,7 @@ export interface Zone {
   active_permit_count: number
   active_alert_count: number
   slug?: string
+  sensors?: Sensor[]
 }
 
 export interface GeoJSONPolygon {
@@ -92,8 +93,9 @@ export interface WSMessage {
 
 export interface RAGResponse {
   answer: string
-  citations: Array<{ source: string; clause: string; excerpt: string }>
-  confidence: number
+  sources?: string[]
+  citations?: Array<{ source: string; clause: string; excerpt: string }>
+  confidence?: number
 }
 
 export interface TokenResponse {

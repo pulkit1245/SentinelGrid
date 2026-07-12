@@ -40,12 +40,13 @@ export default function CompliancePage() {
   }
 
   const handleDownloadReport = (alertId: string) => {
-    const blob = generatedReports[alertId]
-    if (!blob) return
+    const html = generatedReports[alertId]
+    if (!html) return
+    const blob = new Blob([html], { type: 'text/html' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `compliance_report_${alertId}.pdf`
+    a.download = `compliance_report_${alertId}.html`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -113,7 +114,7 @@ export default function CompliancePage() {
                         <CheckCircle size={16} /> Generated
                       </div>
                       <button className="btn" style={{ background: 'var(--color-surface-2)' }} onClick={() => handleDownloadReport(alert.id)}>
-                        <Download size={16} style={{ marginRight: 6 }} /> Download PDF
+                        <Download size={16} style={{ marginRight: 6 }} /> Download HTML
                       </button>
                     </>
                   ) : (
@@ -132,6 +133,19 @@ export default function CompliancePage() {
           })}
         </div>
       )}
+
+      {Object.entries(generatedReports).map(([alertId, html]) => (
+        <div key={alertId} className="card animate-fadeIn" style={{ marginTop: 24 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: 'var(--color-text-secondary)' }}>
+            Report Preview — {alertId.slice(0, 8)}…
+          </h3>
+          <iframe
+            title={`Compliance report ${alertId}`}
+            srcDoc={html}
+            style={{ width: '100%', minHeight: 420, border: '1px solid var(--color-border)', borderRadius: 8 }}
+          />
+        </div>
+      ))}
     </div>
   )
 }

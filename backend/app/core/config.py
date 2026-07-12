@@ -21,6 +21,7 @@ class Settings(BaseSettings):
 
     # ── Qdrant ────────────────────────────────────────────────────────────────
     QDRANT_URL: str = "http://localhost:6333"
+    QDRANT_PATH: str = ""
 
     # ── Auth ──────────────────────────────────────────────────────────────────
     JWT_SECRET_KEY: str = "dev-secret-key-change-in-production"

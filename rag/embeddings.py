@@ -4,15 +4,21 @@ import uuid
 
 # We will use sentence-transformers for local dense embeddings (MVP safe)
 from sentence_transformers import SentenceTransformer
-from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
+
+from rag.qdrant_client_factory import create_qdrant_client
 
 class VectorDatabaseBuilder:
     """
     Handles automated document indexing into Qdrant.
     """
-    def __init__(self, qdrant_url: str = "http://localhost:6333", collection_name: str = "sentinelgrid_knowledge"):
-        self.client = QdrantClient(url=qdrant_url)
+    def __init__(
+        self,
+        qdrant_url: str = "http://localhost:6333",
+        qdrant_path: str | None = None,
+        collection_name: str = "sentinelgrid_knowledge",
+    ):
+        self.client = create_qdrant_client(qdrant_url=qdrant_url, qdrant_path=qdrant_path)
         self.collection_name = collection_name
         self.model = SentenceTransformer('all-MiniLM-L6-v2') # Fast, small model for hackathon
         

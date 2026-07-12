@@ -27,8 +27,8 @@ export function RagQueryPanel({ className = '' }: { className?: string }) {
         return {
           answer: "Based on the safety guidelines, confined space entry requires a valid permit, continuous gas monitoring, a dedicated standby person, and a rescue plan in place. For environments with potential toxic gas, SCBA is mandatory.",
           citations: [
-            { source: "OISD-STD-105", text: "Work Permit System", relevance: 0.95 },
-            { source: "Safety Manual Sec 4", text: "Confined Space Operations", relevance: 0.88 }
+            { source: "OISD-STD-105", clause: "Work Permit System", excerpt: "Confined space entry requires a valid permit and continuous gas monitoring." },
+            { source: "Safety Manual Sec 4", clause: "Confined Space Operations", excerpt: "SCBA is mandatory in environments with potential toxic gas." }
           ]
         } as RAGResponse
       })
@@ -114,7 +114,7 @@ export function RagQueryPanel({ className = '' }: { className?: string }) {
                 {result.citations.map((cit, idx) => (
                   <div key={idx} style={{ padding: 12, background: 'var(--color-surface-3)', borderRadius: 6, border: '1px solid var(--color-border)' }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-accent)', marginBottom: 4 }}>{cit.source}</div>
-                    <div style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>"{cit.text}"</div>
+                    <div style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>"{cit.excerpt}"</div>
                   </div>
                 ))}
               </div>

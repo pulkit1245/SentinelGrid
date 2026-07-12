@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SentinelGrid — Team Task Division &amp; Step-by-Step Build Plan</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f4f0;
+    color: #1a1a1a;
+    padding: 40px 24px 80px;
+    line-height: 1.6;
+  }
+
+  .page-header { max-width: 940px; margin: 0 auto 12px; }
+  .page-title { font-size: 27px; font-weight: 800; color: #111; margin-bottom: 6px; }
+  .page-subtitle { font-size: 14px; color: #666; }
+
+  .toc-box {
+    max-width: 940px; margin: 20px auto 40px; background: #fff;
+    border: 1px solid #e8e6e1; border-radius: 14px; padding: 22px 28px;
+  }
+  .toc-title { font-size: 13px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px; }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px 24px; font-size: 13px; }
+  .toc-grid a { text-decoration: none; }
+  .toc-grid a:hover { text-decoration: underline; }
+  .toc-m1 { color: #4a3db5; } .toc-m2 { color: #1a6b45; } .toc-m3 { color: #8a4a10; }
+
+  .note-box {
+    background: #fffbf0; border: 1px solid #f0d890; border-radius: 10px; padding: 14px 18px; font-size: 13px;
+    color: #7a5a00; margin-bottom: 16px; max-width: 940px; margin-left: auto; margin-right: auto;
+  }
+
+  .member-hero {
+    max-width: 940px; margin: 56px auto 20px; padding: 22px 28px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  }
+  .m1-hero { background: #f0eefd; border: 1px solid #d8d2f7; }
+  .m2-hero { background: #e9f9f0; border: 1px solid #bfe9d1; }
+  .m3-hero { background: #fdf3e6; border: 1px solid #f2d8ae; }
+  .member-hero-title { font-size: 20px; font-weight: 800; }
+  .m1-hero .member-hero-title { color: #4a3db5; } .m2-hero .member-hero-title { color: #1a6b45; } .m3-hero .member-hero-title { color: #8a4a10; }
+  .member-hero-sub { font-size: 13px; color: #555; margin-top: 4px; }
+  .branch-badge {
+    font-size: 13px; color: #555; font-family: 'SF Mono', 'Fira Code', monospace;
+    background: #ffffffaa; padding: 5px 13px; border-radius: 6px; border: 1px solid #ddd;
+  }
+
+  .doc-section { max-width: 940px; margin: 0 auto 40px; }
+  .module-block { margin-bottom: 30px; }
+  .module-heading {
+    font-size: 16px; font-weight: 800; margin-bottom: 4px; padding: 10px 16px; border-radius: 10px 10px 0 0;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  .m1-module-heading { background: #4a3db5; color: #fff; }
+  .m2-module-heading { background: #1a6b45; color: #fff; }
+  .m3-module-heading { background: #8a4a10; color: #fff; }
+  .module-time { font-size: 12px; font-weight: 600; background: rgba(255,255,255,.22); padding: 3px 10px; border-radius: 20px; }
+
+  .step-card { background: #fff; border: 1px solid #e8e6e1; border-top: none; padding: 6px 0; margin-bottom: 14px; border-radius: 0 0 12px 12px; }
+  .step-row { display: flex; gap: 14px; padding: 12px 22px; border-bottom: 1px solid #f0eeea; align-items: flex-start; }
+  .step-row:last-child { border-bottom: none; }
+  .step-num {
+    flex: 0 0 26px; height: 26px; border-radius: 50%; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; color: #fff; margin-top: 1px;
+  }
+  .m1-num { background: #6e5ee0; } .m2-num { background: #2a9e65; } .m3-num { background: #c0672a; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+  .step-detail { font-size: 13px; color: #444; line-height: 1.6; }
+  .step-files { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .file-chip { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11.5px; padding: 4px 9px; border-radius: 6px; border: 1px solid; }
+  .m1-chip { background: #f0eefb; color: #3a2da0; border-color: #ccc8f0; }
+  .m2-chip { background: #e6f7ee; color: #145a35; border-color: #9ed8b8; }
+  .m3-chip { background: #fdf1e6; color: #7a3d08; border-color: #f0c898; }
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12px;
+    background: #f0eefb; color: #4a3db5; padding: 2px 7px; border-radius: 5px; border: 1px solid #ddd9f7;
+  }
+  .m2-mod code { background: #e6f7ee; color: #1a6b45; border-color: #b8e8cf; }
+  .m3-mod code { background: #fdf1e6; color: #8a4a10; border-color: #f5d5ae; }
+
+  .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; background: #fff; border-radius: 10px; overflow: hidden; }
+  .info-table th { text-align: left; padding: 9px 14px; border: 1px solid #ececec; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  .info-table td { padding: 9px 14px; border: 1px solid #ececec; vertical-align: top; color: #2a2a2a; }
+  .info-table tr:nth-child(even) td { background: #fafaf8; }
+  .m1-table th { background: #f0eefb; color: #3a2da0; }
+  .m2-table th { background: #e6f7ee; color: #1a6b45; }
+  .m3-table th { background: #fdf1e6; color: #8a4a10; }
+
+  .deliverables-card { border-radius: 14px; padding: 20px 26px; margin-bottom: 10px; }
+  .m1-deliv { background: #f7f6ff; border: 1px solid #ddd8f7; }
+  .m2-deliv { background: #f1fbf5; border: 1px solid #c5ecd6; }
+  .m3-deliv { background: #fff8ef; border: 1px solid #f2ddb8; }
+  .deliverables-title { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .m1-deliv .deliverables-title { color: #4a3db5; } .m2-deliv .deliverables-title { color: #1a6b45; } .m3-deliv .deliverables-title { color: #8a4a10; }
+  .checklist { list-style: none; padding: 0; }
+  .checklist li { font-size: 13.5px; color: #2a2a2a; padding: 5px 0 5px 24px; position: relative; }
+  .check-box { position: absolute; left: 0; top: 7px; width: 13px; height: 13px; border: 2px solid; border-radius: 4px; display: inline-block; }
+  .m1-deliv .check-box { border-color: #4a3db5; } .m2-deliv .check-box { border-color: #1a6b45; } .m3-deliv .check-box { border-color: #8a4a10; }
+
+  .divider { max-width: 940px; margin: 0 auto 40px; border: none; border-top: 1px solid #ddd; }
+
+  .dep-note { font-size: 13px; color: #555; background: #f3f3f3; border-left: 3px solid #999; padding: 10px 16px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+
+  @media (max-width: 640px) {
+    .toc-grid { grid-template-columns: 1fr; }
+    .step-row { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-title">SentinelGrid — Team Task Division &amp; Step-by-Step Build Plan</div>
+  <div class="page-subtitle">Companion document to the Architecture Blueprint · Granular, file-level, step-by-step task breakdown for a 3-member 48-hour build</div>
+</div>
+
+<div class="toc-box">
+  <div class="toc-title">Table of Contents</div>
+  <div class="toc-grid">
+    <a class="toc-m1" href="#m1-overview">Member 1 — Overview &amp; Timeline</a>
+    <a class="toc-m1" href="#m1-mod1">M1 · Repo &amp; Infra Setup</a>
+    <a class="toc-m1" href="#m1-mod2">M1 · Auth Module</a>
+    <a class="toc-m1" href="#m1-mod3">M1 · Zones &amp; Permits Module</a>
+    <a class="toc-m1" href="#m1-mod4">M1 · Alerts &amp; Notifications</a>
+    <a class="toc-m1" href="#m1-mod5">M1 · Cockpit Frontend</a>
+    <a class="toc-m1" href="#m1-mod6">M1 · Integration &amp; Deployment</a>
+    <a class="toc-m2" href="#m2-overview">Member 2 — Overview &amp; Timeline</a>
+    <a class="toc-m2" href="#m2-mod1">M2 · Simulator</a>
+    <a class="toc-m2" href="#m2-mod2">M2 · Enrichment Worker</a>
+    <a class="toc-m2" href="#m2-mod3">M2 · Multi-Agent Core</a>
+    <a class="toc-m2" href="#m2-mod4">M2 · Computer Vision Pipeline</a>
+    <a class="toc-m2" href="#m2-mod5">M2 · ML Scoring Models</a>
+    <a class="toc-m2" href="#m2-mod6">M2 · Testing &amp; Evaluation</a>
+    <a class="toc-m3" href="#m3-overview">Member 3 — Overview &amp; Timeline</a>
+    <a class="toc-m3" href="#m3-mod1">M3 · Knowledge Graph Setup</a>
+    <a class="toc-m3" href="#m3-mod2">M3 · RAG Corpus &amp; Embeddings</a>
+    <a class="toc-m3" href="#m3-mod3">M3 · Retrieval &amp; Reranking</a>
+    <a class="toc-m3" href="#m3-mod4">M3 · RAG &amp; Compliance Agents</a>
+    <a class="toc-m3" href="#m3-mod5">M3 · Compliance Report Generator</a>
+    <a class="toc-m3" href="#m3-mod6">M3 · Evaluation Harness</a>
+  </div>
+</div>
+
+<div class="note-box">
+  ⚠ Read this alongside <code>sentinelgrid_architecture.html</code>. That document defines <i>what</i> gets built (system architecture, DB schema, API contracts). This document defines <i>who</i> builds it and <i>in what order</i>, down to the file and function level, so all three members can start coding in parallel within the first 2 hours.
+</div>
+
+<!-- ══════════════════════════════ MEMBER 1 ══════════════════════════════ -->
+<div class="member-hero m1-hero" id="m1-overview">
+  <div>
+    <div class="member-hero-title">Member 1 — Backend + Frontend + Integration Lead</div>
+    <div class="member-hero-sub">Owns the repo skeleton, all CRUD APIs, the React cockpit, and final integration/deployment.</div>
+  </div>
+  <span class="branch-badge">feature/m1-backend-frontend → dev → main</span>
+</div>
+
+<div class="doc-section">
+  <table class="info-table m1-table">
+    <tr><th>Hours</th><th>Milestone</th></tr>
+    <tr><td>H0–H2</td><td>Repo, docker-compose, shared contracts committed (blocking step for the whole team)</td></tr>
+    <tr><td>H2–H10</td><td>Auth + Zones/Permits CRUD working against seeded DB</td></tr>
+    <tr><td>H10–H18</td><td>Alerts API + WebSocket channel live; cockpit shell (routing, auth) up</td></tr>
+    <tr><td>H18–H26</td><td>Heatmap + ZoneDrilldown + AlertPanel wired to real WS data</td></tr>
+    <tr><td>H26–H32</td><td>Twilio notification flow + human-confirm evacuation gate complete</td></tr>
+    <tr><td>H32–H44</td><td>Integrates Member 2 &amp; 3's outputs, demo polish</td></tr>
+    <tr><td>H44–H48</td><td>Final merge, deploy, tag, submit</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<div class="doc-section module-block" id="m1-mod1">
+  <div class="module-heading m1-module-heading"><span>Module 1 — Repository &amp; Infrastructure Setup</span><span class="module-time">H0–H2</span></div>
+  <div class="step-card">
+    <div class="step-row">
+      <div class="step-num m1-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Initialize monorepo &amp; branch protection</div>
+        <div class="step-detail">Create the GitHub repo, push the folder skeleton from the architecture doc, protect <code>main</code> (require PR + 1 review + passing CI).</div>
+        <div class="step-files"><span class="file-chip m1-chip">/ (root)</span><span class="file-chip m1-chip">.gitignore</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Write docker-compose for local dev</div>
+        <div class="step-detail">Services: postgres (timescaledb image), redis, neo4j, qdrant, backend (hot-reload), frontend (vite dev). Wire healthchecks so <code>docker compose up</code> is a single command for all three members.</div>
+        <div class="step-files"><span class="file-chip m1-chip">infra/docker-compose.yml</span><span class="file-chip m1-chip">.env.example</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Define shared JSON contracts</div>
+        <div class="step-detail">Write the event/API schemas everyone codes against: sensor reading event, permit event, alert object, zone object. This is the single most important artifact for parallel development — freeze field names before anyone writes logic against them.</div>
+        <div class="step-files"><span class="file-chip m1-chip">shared/schemas/*.json</span><span class="file-chip m1-chip">shared/CONTRACTS.md</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Set up CI pipeline</div>
+        <div class="step-detail">GitHub Actions workflow: lint (ruff/eslint), run backend pytest, run frontend vitest, block merge on failure.</div>
+        <div class="step-files"><span class="file-chip m1-chip">.github/workflows/ci.yml</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Scaffold FastAPI app skeleton</div>
+        <div class="step-detail">App factory, CORS middleware, structured logging config, health endpoint <code>/health</code> so Members 2 &amp; 3 have a running server to build against immediately.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/main.py</span><span class="file-chip m1-chip">backend/app/core/config.py</span><span class="file-chip m1-chip">backend/app/core/logging.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m1-mod2">
+  <div class="module-heading m1-module-heading"><span>Module 2 — Auth Module</span><span class="module-time">H2–H6</span></div>
+  <div class="step-card">
+    <div class="step-row">
+      <div class="step-num m1-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Create User model &amp; migration</div>
+        <div class="step-detail">SQLAlchemy model with role enum (<code>safety_officer</code>/<code>plant_admin</code>/<code>auditor</code>), Alembic migration, seed script with one user per role.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/models/user.py</span><span class="file-chip m1-chip">backend/alembic/versions/0001_users.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Implement password hashing &amp; JWT issuance</div>
+        <div class="step-detail">bcrypt hashing utility; JWT access (15 min) + refresh (7 day) token generation, HS256, secret from env.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/core/security.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build /auth/login and /auth/refresh routes</div>
+        <div class="step-detail">Pydantic request/response schemas, rate-limit the login route (5/min per IP), return access token in body + refresh token as HttpOnly cookie.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/api/v1/auth.py</span><span class="file-chip m1-chip">backend/app/schemas/auth_schema.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build get_current_user dependency &amp; role guard</div>
+        <div class="step-detail">FastAPI dependency validating JWT, injecting user + role into every protected route; a <code>require_role()</code> helper for admin-only endpoints.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/middlewares/auth_middleware.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Frontend: AuthContext, LoginPage, token refresh interceptor</div>
+        <div class="step-detail">React context holding access token in memory only; axios/fetch interceptor that silently refreshes on 401 once before redirecting to login.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/context/AuthContext.tsx</span><span class="file-chip m1-chip">frontend/src/pages/LoginPage.tsx</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Unit + integration tests</div>
+        <div class="step-detail">Pytest: wrong password, expired token, role-mismatch on a protected route. Vitest: login form validation, token-expiry redirect.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/tests/test_auth.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m1-mod3">
+  <div class="module-heading m1-module-heading"><span>Module 3 — Zones &amp; Permits Module</span><span class="module-time">H6–H12</span></div>
+  <div class="step-card">
+    <div class="step-row">
+      <div class="step-num m1-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Create Zone, Sensor, Permit, Worker, Equipment models + migrations</div>
+        <div class="step-detail">Match the schema in the architecture doc exactly (Section 4); include the TimescaleDB hypertable migration for <code>sensor_readings</code>.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/models/zone.py</span><span class="file-chip m1-chip">backend/app/models/permit.py</span><span class="file-chip m1-chip">backend/app/models/sensor.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build zone_repository &amp; permit_repository</div>
+        <div class="step-detail">Async SQLAlchemy repositories: <code>list_zones()</code>, <code>get_zone(id)</code>, <code>create_permit()</code>, <code>get_active_permits_for_zone(zone_id)</code>.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/repositories/zone_repository.py</span><span class="file-chip m1-chip">backend/app/repositories/permit_repository.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build GET /zones and POST /permits routes</div>
+        <div class="step-detail">Validation: reject overlapping active permits of conflicting type in the same zone (409); zone response includes <code>current_risk_score</code> for the heatmap.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/api/v1/zones.py</span><span class="file-chip m1-chip">backend/app/api/v1/permits.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build POST /sensors/ingest route</div>
+        <div class="step-detail">Service-token-authenticated endpoint the simulator (Member 2) posts to; validates payload against the shared schema, writes to <code>sensor_readings</code>, publishes to the Redis Streams enrichment queue.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/api/v1/sensors.py</span><span class="file-chip m1-chip">backend/app/services/ingestion_service.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Seed script for demo zones/sensors/permits</div>
+        <div class="step-detail">4–6 zones matching the simulator's zone IDs exactly (coordinate with Member 2) so floor-plan overlay and simulator events line up on first integration test.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/scripts/seed_demo_data.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Tests: unit + integration</div>
+        <div class="step-detail">Permit-overlap conflict test, ingest-endpoint schema-validation test, seed script idempotency test.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/tests/test_zones.py</span><span class="file-chip m1-chip">backend/app/tests/test_permits.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m1-mod4">
+  <div class="module-heading m1-module-heading"><span>Module 4 — Alerts, WebSocket &amp; Notifications</span><span class="module-time">H12–H20</span></div>
+  <div class="step-card">
+    <div class="step-row">
+      <div class="step-num m1-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Create Alert &amp; EvidenceSnapshot models + migration</div>
+        <div class="step-detail">Includes <code>graph_path JSONB</code> and <code>confirmed_by</code> nullable FK for the human-in-the-loop gate; DB grant removes UPDATE on <code>evidence_snapshots</code> to enforce immutability.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/models/alert.py</span><span class="file-chip m1-chip">backend/app/models/evidence_snapshot.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build GET /alerts/{id} and PATCH /alerts/{id}/confirm</div>
+        <div class="step-detail">Confirm route restricted to <code>plant_admin</code>; on confirm, writes an <code>audit_logs</code> row and triggers the notification service.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/api/v1/alerts.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build /ws/dashboard WebSocket endpoint</div>
+        <div class="step-detail">Validates JWT from query param on handshake; broadcasts zone risk-score updates, new alerts, and permit state changes to all connected cockpit clients; heartbeat/ping every 30s.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/api/v1/dashboard_ws.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Integrate Twilio notification service</div>
+        <div class="step-detail">Sends SMS/WhatsApp on confirmed critical alerts; wraps API errors so a Twilio failure never blocks the confirm-response to the UI.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/services/notification_service.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Error handling &amp; rate limiting middleware</div>
+        <div class="step-detail">Global exception handler returning consistent error envelopes; rate limiter on ingest and confirm endpoints.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/middlewares/error_handler.py</span><span class="file-chip m1-chip">backend/app/middlewares/rate_limiter.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Tests</div>
+        <div class="step-detail">WebSocket connect/auth-reject test, confirm-gate role test, Twilio-call mock test.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/tests/test_alerts.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m1-mod5">
+  <div class="module-heading m1-module-heading"><span>Module 5 — Cockpit Frontend</span><span class="module-time">H12–H30 (parallel with Module 4)</span></div>
+  <div class="step-card">
+    <div class="step-row">
+      <div class="step-num m1-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Create app shell: routing, layout, Navbar, Sidebar</div>
+        <div class="step-detail">React Router routes for Login, Cockpit, ZoneDetail, Compliance, Settings; persistent Navbar with role-aware nav items.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/App.tsx</span><span class="file-chip m1-chip">frontend/src/components/Navbar</span><span class="file-chip m1-chip">frontend/src/components/Sidebar</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build state management &amp; API/WS hooks</div>
+        <div class="step-detail"><code>useZones()</code> (fetch + WS-patch), <code>useLiveAlerts()</code> (subscribe to alert stream), a typed <code>api.ts</code> client wrapping fetch with the auth interceptor.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/hooks/useZones.ts</span><span class="file-chip m1-chip">frontend/src/hooks/useLiveAlerts.ts</span><span class="file-chip m1-chip">frontend/src/services/api.ts</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build Heatmap component (Mapbox GL + deck.gl)</div>
+        <div class="step-detail">Georeferenced floor-plan overlay, zone polygons color-coded by <code>current_risk_score</code>, click-to-drilldown; loading skeleton while first WS snapshot arrives.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/components/Heatmap</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build ZoneDrilldown, AlertPanel, PermitTimeline components</div>
+        <div class="step-detail">ZoneDrilldown shows sensors/permits/workers in a zone; AlertPanel lists alerts with severity badges and a "why" expand showing <code>graph_path</code>; PermitTimeline is a Gantt-style view of active/past permits.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/components/ZoneDrilldown</span><span class="file-chip m1-chip">frontend/src/components/AlertPanel</span><span class="file-chip m1-chip">frontend/src/components/PermitTimeline</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Build evacuation-confirm UI flow</div>
+        <div class="step-detail">Confirm modal on a critical alert, restricted to <code>plant_admin</code> role in the UI (and enforced server-side); optimistic UI update + rollback on error.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/components/AlertPanel/ConfirmModal.tsx</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Loading states, error boundaries, empty states</div>
+        <div class="step-detail">Skeleton loaders for Heatmap/AlertPanel; a top-level ErrorBoundary; empty-state illustration for zero-alert (all-green) state.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/src/components/ErrorBoundary.tsx</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">7</div>
+      <div class="step-body">
+        <div class="step-title">Component &amp; E2E tests</div>
+        <div class="step-detail">Vitest for Heatmap color mapping and AlertPanel filtering; Playwright smoke test: login → view alert → confirm evacuation.</div>
+        <div class="step-files"><span class="file-chip m1-chip">frontend/tests/*</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m1-mod6">
+  <div class="module-heading m1-module-heading"><span>Module 6 — Integration &amp; Deployment</span><span class="module-time">H32–H48</span></div>
+  <div class="step-card">
+    <div class="step-row">
+      <div class="step-num m1-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Wire Member 2's agent/CV events and Member 3's RAG/graph outputs onto the WebSocket channel</div>
+        <div class="step-detail">Confirm event shapes match <code>shared/schemas/</code> exactly; add a translation layer only if a field name drifted during independent development.</div>
+        <div class="step-files"><span class="file-chip m1-chip">backend/app/api/v1/dashboard_ws.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Merge all three feature branches into dev, resolve conflicts</div>
+        <div class="step-detail">Merge order: M1 skeleton (already in dev) → M2 → M3, running the integration test suite after each merge.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Deploy backend to Railway, frontend to Vercel</div>
+        <div class="step-detail">Set all environment variables (DB, Redis, Neo4j, Qdrant, Twilio, Mapbox, LLM API keys) in each platform's dashboard; verify <code>/health</code> and the Vercel build.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Rehearse the demo script end-to-end on the deployed URLs</div>
+        <div class="step-detail">Run the scripted compound-risk scenario against production, time the lead-time counter, confirm no console errors.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m1-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Final checklist, tag, submit</div>
+        <div class="step-detail">Secrets grep, README with architecture diagram + setup steps, tag <code>v1.0.0-submission</code>, fill submission form.</div>
+      </div>
+    </div>
+  </div>
+  <div class="deliverables-card m1-deliv">
+    <div class="deliverables-title">Member 1 — Deliverables Checklist</div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Repo skeleton + docker-compose + CI live within H2</li>
+      <li><span class="check-box"></span>Auth, Zones, Permits, Sensors-ingest, Alerts APIs all passing tests</li>
+      <li><span class="check-box"></span>WebSocket channel broadcasting real-time zone/alert updates</li>
+      <li><span class="check-box"></span>Cockpit: Heatmap, ZoneDrilldown, AlertPanel, PermitTimeline, confirm-evacuation flow</li>
+      <li><span class="check-box"></span>Twilio notification integration working end-to-end</li>
+      <li><span class="check-box"></span>Production deploy verified on Railway + Vercel</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════ MEMBER 2 ══════════════════════════════ -->
+<div class="member-hero m2-hero" id="m2-overview">
+  <div>
+    <div class="member-hero-title">Member 2 — Multi-Agent Systems + AI/ML + Computer Vision</div>
+    <div class="member-hero-sub">Owns the simulator, enrichment pipeline, agent orchestration, compound-risk scoring, and the CV pipeline.</div>
+  </div>
+  <span class="branch-badge">feature/m2-agents-cv → dev</span>
+</div>
+
+<div class="doc-section">
+  <table class="info-table m2-table">
+    <tr><th>Hours</th><th>Milestone</th></tr>
+    <tr><td>H0–H8</td><td>Simulator streaming synthetic zone/sensor/permit events to the ingest endpoint</td></tr>
+    <tr><td>H8–H16</td><td>Enrichment worker computing rolling-window features; anomaly detector running</td></tr>
+    <tr><td>H16–H26</td><td>Compound Risk Agent + Orchestrator producing scored, pattern-matched alerts</td></tr>
+    <tr><td>H16–H28</td><td>CV pipeline (parallel track): YOLOv8 + DeepSORT + PPE classifier publishing events</td></tr>
+    <tr><td>H28–H36</td><td>XGBoost scorer trained and integrated; scenario-based evaluation run</td></tr>
+    <tr><td>H36–H48</td><td>Bug-fix, integration support, demo scenario rehearsal</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<div class="doc-section module-block" id="m2-mod1">
+  <div class="module-heading m2-module-heading"><span>Module 1 — Synthetic Plant Simulator</span><span class="module-time">H0–H8</span></div>
+  <div class="step-card m2-mod">
+    <div class="step-row">
+      <div class="step-num m2-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Define 4–6 zones with hazard classes</div>
+        <div class="step-detail">Coordinate zone IDs/names with Member 1's seed script so the floor-plan overlay lines up exactly with simulated data (e.g. <code>zone-01-degassing</code>, <code>zone-02-castfloor</code>).</div>
+        <div class="step-files"><span class="file-chip m2-chip">simulator/plant_simulator.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build baseline sensor-stream generator</div>
+        <div class="step-detail">Gas/temp/pressure/vibration readings with realistic noise per zone at 1Hz-equivalent simulated rate, posted to <code>/api/v1/sensors/ingest</code>.</div>
+        <div class="step-files"><span class="file-chip m2-chip">simulator/scenario_scripts/baseline_scenario.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build shift-roster generator</div>
+        <div class="step-detail">Emits shift-boundary events (day/night/changeover) on a schedule the Compound Risk Agent can query for "shift boundary within 30 min."</div>
+        <div class="step-files"><span class="file-chip m2-chip">simulator/shift_roster_generator.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Script the scripted compound-risk demo scenario</div>
+        <div class="step-detail">Timeline: hot-work permit issued → gas reading begins a slow upward drift → shift-changeover countdown starts → all three conditions overlap at a scripted timestamp. Tune drift slope for a 15–45 min lead-time window vs. the single-sensor threshold.</div>
+        <div class="step-files"><span class="file-chip m2-chip">simulator/scenario_scripts/compound_risk_scenario_1.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Build the single-sensor baseline comparator</div>
+        <div class="step-detail">A minimal script that only fires when a reading crosses its own statutory threshold — run side-by-side with SentinelGrid live in the demo to prove lead-time and detection-accuracy claims.</div>
+        <div class="step-files"><span class="file-chip m2-chip">simulator/baseline_comparator.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">6</div>
+      <div class="step-body">
+        <div class="step-title">CLI flags &amp; replay control</div>
+        <div class="step-detail">Add <code>--scenario</code>, <code>--speed</code> flags so the demo can be paused/replayed live without restarting the whole stack.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m2-mod2">
+  <div class="module-heading m2-module-heading"><span>Module 2 — Enrichment Worker</span><span class="module-time">H8–H16</span></div>
+  <div class="step-card m2-mod">
+    <div class="step-row">
+      <div class="step-num m2-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Consume the Redis Streams ingest queue</div>
+        <div class="step-detail">Worker process pulling raw sensor/permit/CV events, acknowledging on successful processing, dead-lettering malformed events.</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/workers/tasks/enrichment_task.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Implement time-alignment across heterogeneous sample rates</div>
+        <div class="step-detail">Bucket gas/temp readings, CV occupancy counts, and permit events onto a common time grid so cross-source correlation is well-defined.</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/utils/time_alignment.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Compute rolling-window aggregates (5/15/60 min)</div>
+        <div class="step-detail">Per-zone trend slope, mean, max, and drift-rate features, written to the risk-graph Zone node as updated properties.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Integrate Isolation Forest anomaly detector</div>
+        <div class="step-detail">Flags sensor drift before an absolute-threshold breach; output feeds as an additional feature into the Compound Risk Agent.</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/ml/anomaly/isolation_forest.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Error handling &amp; backpressure</div>
+        <div class="step-detail">Worker retries transient DB errors with backoff; queue depth metric logged so a stuck worker is visible before the demo, not during it.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Unit tests for feature builders</div>
+        <div class="step-detail">Fixed-input tests confirming trend-slope and drift-rate math against hand-calculated expected values.</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/tests/test_enrichment.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m2-mod3">
+  <div class="module-heading m2-module-heading"><span>Module 3 — Multi-Agent Core (Orchestrator + Compound Risk + Permit Intelligence)</span><span class="module-time">H16–H26</span></div>
+  <div class="step-card m2-mod">
+    <div class="step-row">
+      <div class="step-num m2-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Build the shared blackboard client</div>
+        <div class="step-detail">A thin wrapper agents use to read/write Zone/Permit/Sensor state from the Plant Risk Graph (Neo4j client from Member 3, or the networkx fallback).</div>
+        <div class="step-files"><span class="file-chip m2-chip">agents/shared_blackboard.py</span><span class="file-chip m2-chip">agents/graph_client.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Implement the Compound Risk Agent</div>
+        <div class="step-detail">Runs the graph-pattern query (hot-work permit ∩ zone ∩ gas-trend-slope-positive ∩ shift-boundary-within-30-min) every enrichment cycle, plus the XGBoost score once trained (Module 5).</div>
+        <div class="step-files"><span class="file-chip m2-chip">agents/compound_risk_agent.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Implement the Digital Permit Intelligence Agent</div>
+        <div class="step-detail">Validates every active permit against live zone conditions at issuance and re-validates continuously; flags e.g. hot work within a configurable radius of elevated gas readings.</div>
+        <div class="step-files"><span class="file-chip m2-chip">agents/permit_intelligence_agent.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Implement the Orchestrator Agent (LangGraph state machine)</div>
+        <div class="step-detail">Arbitrates across Compound Risk, Permit Intelligence, and (once available) Incident-RAG/Compliance agent outputs; requires ≥2 corroborating signals before escalating to "critical" (false-positive suppression); encodes the statutory hard-rules floor as a non-overridable first check.</div>
+        <div class="step-files"><span class="file-chip m2-chip">agents/orchestrator_agent.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Wire agent output to the Alerts API</div>
+        <div class="step-detail">On escalation, orchestrator calls Member 1's alert-creation service internally (not over HTTP — direct service call within the same backend process) with the full <code>graph_path</code>.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Agent-level tests</div>
+        <div class="step-detail">Scripted positive scenario (should escalate) and negative scenario (should stay green) run through the full agent chain; false-positive-suppression unit test with only 1 corroborating signal.</div>
+        <div class="step-files"><span class="file-chip m2-chip">agents/tests/test_orchestrator.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m2-mod4">
+  <div class="module-heading m2-module-heading"><span>Module 4 — Computer Vision (OpenCV) Pipeline</span><span class="module-time">H16–H28 (parallel with Module 3)</span></div>
+  <div class="step-card m2-mod">
+    <div class="step-row">
+      <div class="step-num m2-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Build the frame ingestor</div>
+        <div class="step-detail">Reads pre-recorded/looped per-zone clips (stand-in for live RTSP) at ~2–5 fps, feeds frames into the detection loop.</div>
+        <div class="step-files"><span class="file-chip m2-chip">cv/frame_ingestor.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Integrate YOLOv8n detector</div>
+        <div class="step-detail">Load pretrained weights, fine-tune/label-map for person + PPE classes (hard-hat, vest, no-hard-hat); OpenCV preprocessing (resize, letterbox, brightness correction).</div>
+        <div class="step-files"><span class="file-chip m2-chip">cv/yolo_detector.py</span><span class="file-chip m2-chip">cv/models/yolov8n_ppe.pt</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Add DeepSORT tracking</div>
+        <div class="step-detail">Assigns persistent worker IDs across frames to compute zone dwell-time and avoid duplicate-counting the same worker as multiple violations.</div>
+        <div class="step-files"><span class="file-chip m2-chip">cv/deepsort_tracker.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build PPE classifier &amp; zone-occupancy counter</div>
+        <div class="step-detail">Per-worker compliance flag; per-zone occupancy count published as a rolling-window feature into the enrichment queue.</div>
+        <div class="step-files"><span class="file-chip m2-chip">cv/ppe_classifier.py</span><span class="file-chip m2-chip">cv/zone_occupancy.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Publish detection events &amp; snapshot-on-violation</div>
+        <div class="step-detail">Events (worker_count, ppe_violation, zone_id, timestamp, confidence) posted to the enrichment queue; annotated frame saved to object storage only on a violation event, to control storage cost.</div>
+        <div class="step-files"><span class="file-chip m2-chip">cv/frame_ingestor.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">6</div>
+      <div class="step-body">
+        <div class="step-title">CV validation</div>
+        <div class="step-detail">Evaluate detection precision and ID-switch rate on a small labeled clip set; explicitly track false-positive PPE-violation rate to avoid alarm fatigue.</div>
+        <div class="step-files"><span class="file-chip m2-chip">cv/tests/test_detection.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m2-mod5">
+  <div class="module-heading m2-module-heading"><span>Module 5 — Compound-Risk XGBoost Scorer</span><span class="module-time">H26–H36</span></div>
+  <div class="step-card m2-mod">
+    <div class="step-row">
+      <div class="step-num m2-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Feature engineering</div>
+        <div class="step-detail">Gas trend slope, permit-zone overlap count, shift-boundary proximity, equipment maintenance-overdue flag, CV occupancy count, historical incident-similarity score (from Member 3's RAG output once available).</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/ml/scoring/train.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Generate labeled training data from scenario scripts</div>
+        <div class="step-detail">Run baseline + compound-risk scenarios repeatedly with parameter jitter to produce a labeled dataset (safe vs. compound-risk) large enough for a stable XGBoost fit.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Train &amp; serialize the model</div>
+        <div class="step-detail">Train/validation split, export <code>model.pkl</code>, log feature importances for the pitch/demo narrative.</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/ml/scoring/model.pkl</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build the inference wrapper</div>
+        <div class="step-detail"><code>infer.py</code> loads the model once at worker startup and exposes <code>score(features) -> 0-100</code> called by the Compound Risk Agent.</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/ml/scoring/infer.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Evaluate against the single-sensor baseline</div>
+        <div class="step-detail">Precision/recall on the labeled scenario set, target catching 4/4 scripted compound scenarios with false-positive rate under an agreed ceiling (e.g. &lt;1 per 20 simulated shifts).</div>
+        <div class="step-files"><span class="file-chip m2-chip">backend/app/ml/scoring/evaluate.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m2-mod6">
+  <div class="module-heading m2-module-heading"><span>Module 6 — Testing &amp; Evaluation Support</span><span class="module-time">H36–H48</span></div>
+  <div class="step-card m2-mod">
+    <div class="step-row">
+      <div class="step-num m2-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Run the full precision/recall report vs. baseline</div>
+        <div class="step-detail">Produce the numbers Member 1's cockpit will display live during the demo (detection accuracy, lead time).</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Support integration debugging</div>
+        <div class="step-detail">Pair with Member 1 during merge to fix any event-shape mismatches between simulator/CV output and the shared schemas.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m2-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Rehearse the scripted scenario timing</div>
+        <div class="step-detail">Confirm the compound-risk scenario reliably produces the target 15–45 min lead-time window on the deployed (not just local) stack.</div>
+      </div>
+    </div>
+  </div>
+  <div class="deliverables-card m2-deliv">
+    <div class="deliverables-title">Member 2 — Deliverables Checklist</div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Simulator streaming baseline + scripted compound-risk scenario reliably</li>
+      <li><span class="check-box"></span>Enrichment worker producing correct rolling-window features</li>
+      <li><span class="check-box"></span>Orchestrator + Compound Risk + Permit Intelligence agents escalating correctly on scripted scenarios</li>
+      <li><span class="check-box"></span>CV pipeline detecting PPE violations and publishing zone-occupancy events</li>
+      <li><span class="check-box"></span>XGBoost scorer trained, evaluated, and beating the single-sensor baseline on the labeled set</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════ MEMBER 3 ══════════════════════════════ -->
+<div class="member-hero m3-hero" id="m3-overview">
+  <div>
+    <div class="member-hero-title">Member 3 — RAG + LLM + Knowledge Graph + ML Models</div>
+    <div class="member-hero-sub">Owns the Plant Risk Graph, the RAG pipeline over regulatory/incident text, and the compliance-report generator.</div>
+  </div>
+  <span class="branch-badge">feature/m3-rag-graph → dev</span>
+</div>
+
+<div class="doc-section">
+  <table class="info-table m3-table">
+    <tr><th>Hours</th><th>Milestone</th></tr>
+    <tr><td>H0–H8</td><td>Neo4j/networkx graph schema live, Zone/Permit/Sensor nodes writable</td></tr>
+    <tr><td>H8–H18</td><td>RAG corpus curated and chunked; embeddings indexed in Qdrant</td></tr>
+    <tr><td>H18–H26</td><td>Hybrid retrieval + reranking returning citation-grounded answers</td></tr>
+    <tr><td>H26–H34</td><td>Incident-RAG and Compliance-Audit agents integrated with the Orchestrator</td></tr>
+    <tr><td>H34–H40</td><td>Compliance report generator producing a filled PDF from a confirmed alert</td></tr>
+    <tr><td>H40–H48</td><td>RAG evaluation harness run, results ready for the live demo</td></tr>
+  </table>
+</div>
+
+<hr class="divider">
+
+<div class="doc-section module-block" id="m3-mod1">
+  <div class="module-heading m3-module-heading"><span>Module 1 — Knowledge Graph Setup</span><span class="module-time">H0–H8</span></div>
+  <div class="step-card m3-mod">
+    <div class="step-row">
+      <div class="step-num m3-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Write the Cypher schema</div>
+        <div class="step-detail">Node labels: Zone, Sensor, Permit, Worker, Equipment, HazardClass, Incident. Edge types: LOCATED_IN, OVERLAPS_WITH, PRECEDES, MAINTAINED_BY, HISTORICALLY_CORRELATED_WITH.</div>
+        <div class="step-files"><span class="file-chip m3-chip">graph/schema.cypher</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build the graph_builder ingestion sync</div>
+        <div class="step-detail">Listens for zone/permit/sensor writes from Postgres (via the shared services) and mirrors them into Neo4j as nodes/edges, keeping the graph eventually consistent with the transactional DB.</div>
+        <div class="step-files"><span class="file-chip m3-chip">graph/graph_builder.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build the networkx fallback</div>
+        <div class="step-detail">Same node/edge interface as the Neo4j client so agents (Member 2) can develop against either backend without code changes — critical if Neo4j setup slips on demo hardware.</div>
+        <div class="step-files"><span class="file-chip m3-chip">graph/networkx_fallback.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Write pattern_queries.py</div>
+        <div class="step-detail">Parameterized Cypher/networkx queries for the known compound-risk templates (hot-work + gas-drift + shift-boundary), exposed as a clean function API for the Compound Risk Agent.</div>
+        <div class="step-files"><span class="file-chip m3-chip">graph/pattern_queries.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Expose GET /graph/zone/{id}/path for the "why" evidence trail</div>
+        <div class="step-detail">Returns the matched graph-path for a given alert so Member 1's AlertPanel can render it human-readably.</div>
+        <div class="step-files"><span class="file-chip m3-chip">backend/app/api/v1/graph.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Unit tests</div>
+        <div class="step-detail">Pattern queries match on positive synthetic fixtures and do not match on negative (safe) fixtures.</div>
+        <div class="step-files"><span class="file-chip m3-chip">graph/tests/test_pattern_queries.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m3-mod2">
+  <div class="module-heading m3-module-heading"><span>Module 2 — RAG Corpus &amp; Embedding Pipeline</span><span class="module-time">H8–H18</span></div>
+  <div class="step-card m3-mod">
+    <div class="step-row">
+      <div class="step-num m3-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Curate the demo corpus</div>
+        <div class="step-detail">10–15 representative OISD/DGMS/Factory Act clauses plus mock/representative incident reports, kept small and clean specifically so citation accuracy can be honestly claimed at 100% for the demo.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/corpus/oisd_clauses/</span><span class="file-chip m3-chip">rag/corpus/incident_reports/</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build the chunking pipeline</div>
+        <div class="step-detail">Split by section/paragraph (~300–500 tokens, 15% overlap); tag every chunk with source metadata (clause number, incident ID, date).</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/chunking.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Generate and index embeddings in Qdrant</div>
+        <div class="step-detail">Batch-embed all chunks, upsert into a Qdrant collection with metadata payload for filtering by source type.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/embeddings.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build the parallel BM25 sparse index</div>
+        <div class="step-detail">Needed for hybrid retrieval so regulatory-jargon exact matches aren't lost to pure dense-embedding recall gaps.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Re-index script &amp; corpus versioning</div>
+        <div class="step-detail">A single command to rebuild the index if the corpus changes, so last-minute clause additions before the demo don't require manual Qdrant surgery.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/scripts/reindex.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m3-mod3">
+  <div class="module-heading m3-module-heading"><span>Module 3 — Hybrid Retrieval, Reranking &amp; Citation Guard</span><span class="module-time">H18–H26</span></div>
+  <div class="step-card m3-mod">
+    <div class="step-row">
+      <div class="step-num m3-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Implement hybrid_retriever.py</div>
+        <div class="step-detail">BM25 + dense retrieval with reciprocal-rank fusion, returning the top-8 candidate chunks for a query.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/hybrid_retriever.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Implement the cross-encoder reranker</div>
+        <div class="step-detail">Re-ranks the top-8 down to the top-3 most relevant to the query zone's current hazard signature.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/reranker.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Build the LLM prompt for grounded answer generation</div>
+        <div class="step-detail">Injects only the reranked, source-tagged chunks; explicit instruction to never state a clause number not present in the retrieved context.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/prompts/answer_prompt.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Build citation_guard.py</div>
+        <div class="step-detail">Post-checks every clause/incident reference in the LLM's answer against the retrieved chunk set; strips unverified citations and triggers one regeneration attempt before falling back to "not found in corpus."</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/citation_guard.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Expose POST /rag/query</div>
+        <div class="step-detail">Wraps the full retrieve → rerank → generate → guard pipeline behind a single authenticated endpoint the cockpit's RAG panel calls.</div>
+        <div class="step-files"><span class="file-chip m3-chip">backend/app/api/v1/rag.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Loading state &amp; error handling in the query flow</div>
+        <div class="step-detail">Explicit timeout/error path so a slow LLM call degrades to a clear "retrieval succeeded, generation timed out" message rather than an opaque failure.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m3-mod4">
+  <div class="module-heading m3-module-heading"><span>Module 4 — Incident-RAG Agent &amp; Compliance-Audit Agent</span><span class="module-time">H26–H34</span></div>
+  <div class="step-card m3-mod">
+    <div class="step-row">
+      <div class="step-num m3-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Implement incident_rag_agent.py</div>
+        <div class="step-detail">For any elevated-risk zone, retrieves the most similar historical near-miss/incident and the governing regulatory clause; writes a <code>HISTORICALLY_CORRELATED_WITH</code> edge back into the graph when confidence exceeds threshold.</div>
+        <div class="step-files"><span class="file-chip m3-chip">agents/incident_rag_agent.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Implement compliance_audit_agent.py</div>
+        <div class="step-detail">Diffs live zone/permit state against the curated OISD/DGMS/Factory Act rule set and drafts corrective-action items when a gap is found.</div>
+        <div class="step-files"><span class="file-chip m3-chip">agents/compliance_audit_agent.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Register both agents with the Orchestrator</div>
+        <div class="step-detail">Coordinate with Member 2 so the Orchestrator's corroboration check can include Incident-RAG similarity as a signal, not just Compound Risk + Permit Intelligence.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Feed the historical-incident-similarity feature to Member 2's XGBoost scorer</div>
+        <div class="step-detail">Agree on the exact feature contract (0–1 similarity score, source incident ID) before Member 2 finalizes training in their Module 5.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Tests</div>
+        <div class="step-detail">Agent-level test confirming a scripted "precursor pattern" scenario correctly surfaces the matching historical incident and clause.</div>
+        <div class="step-files"><span class="file-chip m3-chip">agents/tests/test_incident_rag_agent.py</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m3-mod5">
+  <div class="module-heading m3-module-heading"><span>Module 5 — Compliance Report Generator</span><span class="module-time">H34–H40</span></div>
+  <div class="step-card m3-mod">
+    <div class="step-row">
+      <div class="step-num m3-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Design the OISD/DGMS-format report template</div>
+        <div class="step-detail">Sections: incident summary, zone/sensor evidence, matched historical precedent, governing clause, recommended corrective action.</div>
+        <div class="step-files"><span class="file-chip m3-chip">backend/app/services/compliance_report_service.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Build the LLM-fill step</div>
+        <div class="step-detail">Populates the template from the confirmed alert's <code>graph_path</code>, evidence snapshot, and the Incident-RAG/Compliance-Audit agent outputs — grounded, not free-generated.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Render to PDF</div>
+        <div class="step-detail">Simple HTML-to-PDF render for the hackathon; store the output in the S3-compatible bucket alongside the evidence snapshot.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Expose GET /compliance/report/{alert_id}</div>
+        <div class="step-detail">Restricted to <code>plant_admin</code>/<code>auditor</code>; returns 404 if the underlying alert hasn't been human-confirmed yet.</div>
+        <div class="step-files"><span class="file-chip m3-chip">backend/app/api/v1/compliance.py</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Tests</div>
+        <div class="step-detail">Snapshot test on the generated report structure; confirm the 404-before-confirm guard.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section module-block" id="m3-mod6">
+  <div class="module-heading m3-module-heading"><span>Module 6 — RAG Evaluation Harness</span><span class="module-time">H40–H48</span></div>
+  <div class="step-card m3-mod">
+    <div class="step-row">
+      <div class="step-num m3-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Build the gold-answer set</div>
+        <div class="step-detail">10–15 question/expected-clause pairs against the curated corpus, used to measure citation accuracy before every demo run.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/eval/gold_answers.json</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Run the adversarial prompt-injection test set</div>
+        <div class="step-detail">Feed known adversarial strings through the citation-guard layer; target near-100% flag rate on the known set.</div>
+        <div class="step-files"><span class="file-chip m3-chip">rag/eval/adversarial_set.json</span></div>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num m3-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Report results with confidence intervals</div>
+        <div class="step-detail">Given the small synthetic test set, report honestly rather than overclaiming — this is the credibility-building move for judges.</div>
+      </div>
+    </div>
+  </div>
+  <div class="deliverables-card m3-deliv">
+    <div class="deliverables-title">Member 3 — Deliverables Checklist</div>
+    <ul class="checklist">
+      <li><span class="check-box"></span>Plant Risk Graph schema live (Neo4j + networkx fallback)</li>
+      <li><span class="check-box"></span>RAG corpus curated, chunked, embedded, and indexed (dense + BM25)</li>
+      <li><span class="check-box"></span>Hybrid retrieval + reranking + citation guard returning verified answers</li>
+      <li><span class="check-box"></span>Incident-RAG and Compliance-Audit agents integrated with the Orchestrator</li>
+      <li><span class="check-box"></span>Compliance report generator producing a filled PDF from a confirmed alert</li>
+      <li><span class="check-box"></span>RAG evaluation results (citation accuracy, adversarial flag rate) ready for the demo</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="doc-section">
+  <div class="dep-note">Cross-team dependency notes: Member 1's <code>shared/schemas/</code> (frozen at H2) is the contract all three members code against — no one should read another member's internal module code directly during the parallel build window. Member 2 and Member 3 both write into the same Plant Risk Graph via <code>agents/graph_client.py</code> / <code>graph/networkx_fallback.py</code> — agree on the exact node/edge property names in Module 1 (M3) before Module 3 (M2) starts writing pattern queries against them.</div>
+</div>
+
+</body>
+</html>

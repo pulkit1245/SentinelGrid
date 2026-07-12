@@ -80,10 +80,17 @@ def upgrade() -> None:
     op.create_index("ix_sensor_readings_sensor_id", "sensor_readings", ["sensor_id"])
     op.create_index("ix_sensor_readings_recorded_at", "sensor_readings", ["recorded_at"])
 
-    # Convert sensor_readings to TimescaleDB hypertable
-    op.execute(
-        "SELECT create_hypertable('sensor_readings', 'recorded_at', if_not_exists => TRUE)"
-    )
+    # Convert to TimescaleDB hypertable when extension is available (skip on plain Postgres demo)
+    from sqlalchemy import text
+
+    conn = op.get_bind()
+    has_timescale = conn.execute(
+        text("SELECT 1 FROM pg_extension WHERE extname = 'timescaledb'")
+    ).fetchone()
+    if has_timescale:
+        op.execute(
+            "SELECT create_hypertable('sensor_readings', 'recorded_at', if_not_exists => TRUE)"
+        )
 
 
 def downgrade() -> None:

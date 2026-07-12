@@ -74,11 +74,11 @@ export function Heatmap({ zones }: { zones: Zone[] }) {
 
             <div style={{ display: 'flex', gap: 16, marginTop: 16, borderTop: '1px solid var(--color-border)', paddingTop: 12 }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-text-primary)' }}>{zone.active_alerts_count || 0}</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-text-primary)' }}>{zone.active_alert_count || 0}</span>
                 <span style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Alerts</span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-text-primary)' }}>{zone.active_permits_count || 0}</span>
+                <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--color-text-primary)' }}>{zone.active_permit_count || 0}</span>
                 <span style={{ fontSize: 10, color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Permits</span>
               </div>
             </div>

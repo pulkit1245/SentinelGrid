@@ -71,6 +71,11 @@ DEMO_USERS = [
 ]
 
 
+def deterministic_sensor_id(zone_id: uuid.UUID, sensor_type: str) -> uuid.UUID:
+    """Match ingest_adapters.try_normalize_sensor_ingest UUID5 scheme."""
+    return uuid.uuid5(uuid.NAMESPACE_DNS, f"{zone_id}:{sensor_type}")
+
+
 async def seed(session: AsyncSession) -> None:
     from sqlalchemy import select
 
@@ -84,17 +89,20 @@ async def seed(session: AsyncSession) -> None:
             print(f"  ✅ Zone: {z['name']}")
     await session.flush()
 
-    # Sensors
+    # Sensors (deterministic IDs so simulator ingest resolves correctly)
     for s in DEMO_SENSORS:
-        sensor = Sensor(**s)
-        session.add(sensor)
-    print(f"  ✅ {len(DEMO_SENSORS)} sensors created")
+        sensor_id = deterministic_sensor_id(s["zone_id"], s["sensor_type"])
+        exists = await session.execute(select(Sensor).where(Sensor.id == sensor_id))
+        if not exists.scalar_one_or_none():
+            session.add(Sensor(id=sensor_id, **s))
+    print(f"  ✅ {len(DEMO_SENSORS)} sensors ensured")
 
     # Workers
     for w in DEMO_WORKERS:
-        worker = Worker(**w)
-        session.add(worker)
-    print(f"  ✅ {len(DEMO_WORKERS)} workers created")
+        exists = await session.execute(select(Worker).where(Worker.badge_id == w["badge_id"]))
+        if not exists.scalar_one_or_none():
+            session.add(Worker(**w))
+    print(f"  ✅ {len(DEMO_WORKERS)} workers ensured")
 
     # Users
     for u in DEMO_USERS:

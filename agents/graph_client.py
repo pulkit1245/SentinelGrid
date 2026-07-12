@@ -128,6 +128,81 @@ class NetworkXGraphClient(GraphClientBase):
             events = [e for e in events if e.get("event_type") == event_type]
         return events[-limit:]
 
+    def query_compound_patterns(self, zone_id: str) -> dict:
+        """M3-compatible pattern query over the in-memory graph."""
+        node = self._zone_node(zone_id)
+        zone_props = dict(self.g.nodes[node].get("properties", {}))
+        zone_props["zone_id"] = zone_id
+
+        active_permits = [
+            {
+                "permit_id": p.permit_id,
+                "permit_type": p.permit_type,
+                "status": p.status,
+            }
+            for p in self.active_permits(zone_id)
+        ]
+
+        sensors = []
+        for permit_node, _, _ in self.g.in_edges(node):
+            pass
+        for _, target, data in self.g.edges(data=True):
+            if target == node and data.get("relation") == "LOCATED_IN":
+                sensors.append({"sensor_type": "gas", "last_reading": zone_props.get("gas_last_value", 0.0)})
+
+        return {
+            "zone": zone_props,
+            "active_permits": active_permits,
+            "sensors": sensors,
+        }
+
+    def get_path_for_alert(self, zone_id: str) -> dict:
+        """Return a neighborhood subgraph for alert lineage visualization."""
+        node = self._zone_node(zone_id)
+        nodes = [{"id": zone_id, **self.g.nodes[node].get("properties", {}), "type": "Zone"}]
+        edges = []
+
+        for permit in self.active_permits(zone_id):
+            permit_node = f"permit:{permit.permit_id}"
+            if permit_node in self.g:
+                nodes.append(
+                    {
+                        "id": permit.permit_id,
+                        "permit_type": permit.permit_type,
+                        "status": permit.status,
+                        "type": "Permit",
+                    }
+                )
+                edges.append({"source": permit.permit_id, "target": zone_id, "type": "ISSUED_IN"})
+
+        zone_props = self.g.nodes[node].get("properties", {})
+        for key, value in zone_props.items():
+            if key.endswith("_last_value"):
+                sensor_type = key.replace("_last_value", "")
+                nodes.append({"id": f"sensor-{sensor_type}", "sensor_type": sensor_type, "last_reading": value, "type": "Sensor"})
+                edges.append({"source": f"sensor-{sensor_type}", "target": zone_id, "type": "LOCATED_IN"})
+
+        return {"nodes": nodes, "edges": edges}
+
+    def add_historical_correlation(
+        self, zone_id: str, incident_id: str, weight: float, incident_details: dict
+    ) -> None:
+        zone_node = self._zone_node(zone_id)
+        incident_node = f"incident:{incident_id}"
+        self.g.add_node(incident_node, type="Incident", **incident_details)
+        self.g.add_edge(zone_node, incident_node, relation="HISTORICALLY_CORRELATED_WITH", weight=weight)
+
+
+_shared_client: Optional[NetworkXGraphClient] = None
+
+
+def get_shared_graph_client() -> NetworkXGraphClient:
+    """Process-wide singleton used by backend API, agents, and enrichment worker."""
+    global _shared_client
+    if _shared_client is None:
+        _shared_client = NetworkXGraphClient()
+    return _shared_client
+
 
 class Neo4jGraphClient(GraphClientBase):
     """

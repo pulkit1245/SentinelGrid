@@ -4,10 +4,9 @@ import logging
 import time
 from typing import Callable
 
-import redis.asyncio as aioredis
 from fastapi import HTTPException, Request, status
 
-from app.core.config import settings
+from app.core.redis_client import get_async_redis
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ def rate_limit(max_calls: int, window_seconds: int):
         key = f"sentinelgrid:ratelimit:{path}:{client_ip}"
 
         try:
-            r = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+            r = get_async_redis(decode_responses=True)
             pipe = r.pipeline()
             now = int(time.time())
             window_start = now - window_seconds

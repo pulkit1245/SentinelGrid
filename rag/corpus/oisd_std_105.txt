@@ -1,0 +1,13 @@
+OISD-STD-105 — Oil Industry Safety Directorate Standard (Excerpt)
+
+Section 4.2 — Hot Work in Hazardous Areas
+Before issuing any hot work permit in a classified gas zone, the Lower Explosive Limit (LEL) reading must be strictly 0%. No hot work shall commence if any flammable gas reading is detected. Continuous gas monitoring is mandatory during the entire duration of hot work operations.
+
+Section 4.4 — Degassing Operations and Hot Work Separation
+Hot work is prohibited within a 15-meter radius of an active degassing operation. Concurrent degassing and hot work in adjacent tanks or vessels is strictly prohibited. A minimum isolation distance of 15 meters must be maintained between degassing vents and any ignition source.
+
+Section 4.6 — Confined Space Entry
+Personnel entering confined spaces must use approved self-contained breathing apparatus (SCBA) or supplied-air respirators when oxygen levels fall below 19.5%. A standby attendant must be present at all times at the entry point.
+
+Section 5.1 — Gas Detection Requirements
+Fixed and portable gas detectors must be calibrated monthly. Alarm setpoints for flammable gases in Zone 01 (degassing) shall not exceed 60% LEL for warning and 100% LEL for statutory shutdown.

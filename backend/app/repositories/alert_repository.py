@@ -49,7 +49,7 @@ class AlertRepository:
         await self.session.execute(
             update(Alert)
             .where(Alert.id == alert_id)
-            .values(confirmed_by=user_id, confirmed_at=confirmed_at)
+            .values(confirmed_by=user_id, confirmed_at=confirmed_at, is_active=False)
         )
         await self.session.flush()
         return await self.get_alert(alert_id)

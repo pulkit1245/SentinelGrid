@@ -75,6 +75,7 @@ jobs:
         run: pytest app/tests/ -v --tb=short
         working-directory: backend
         env:
+          PYTHONPATH: ${{ github.workspace }}
           DATABASE_URL: postgresql+asyncpg://sentinelgrid:password@localhost:5432/sentinelgrid_test
           REDIS_URL: redis://localhost:6379
           JWT_SECRET_KEY: test-secret-key

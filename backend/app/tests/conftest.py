@@ -4,6 +4,8 @@ import asyncio
 import uuid
 from typing import AsyncGenerator
 
+import os
+
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
@@ -15,7 +17,10 @@ from app.models.base import Base, get_db
 from app.models.user import User
 
 # ── Test Database ─────────────────────────────────────────────────────────────
-TEST_DB_URL = "postgresql+asyncpg://sentinelgrid:password@localhost:5432/sentinelgrid_test"
+TEST_DB_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql+asyncpg://sentinelgrid:password@localhost:5432/sentinelgrid_test",
+)
 
 test_engine = create_async_engine(TEST_DB_URL, echo=False)
 TestSession = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)

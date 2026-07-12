@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MessageSquare, Search, BookOpen, ExternalLink } from 'lucide-react'
+import { MessageSquare, Search, BookOpen } from 'lucide-react'
 import type { RAGResponse } from '../types'
 import { api } from '../services/api'
 
@@ -97,7 +97,7 @@ export default function RAGPage() {
               <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)' }}>
                 Answer
               </span>
-              {response.confidence > 0 && (
+              {response.confidence != null && response.confidence > 0 && (
                 <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--color-text-muted)' }}>
                   Confidence: {(response.confidence * 100).toFixed(0)}%
                 </span>
@@ -106,14 +106,14 @@ export default function RAGPage() {
             <p style={{ lineHeight: 1.8, color: 'var(--color-text-primary)' }}>{response.answer}</p>
           </div>
 
-          {/* Citations */}
-          {response.citations.length > 0 && (
+          {/* Citations / sources */}
+          {(response.citations?.length ?? 0) > 0 ? (
             <div>
               <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', marginBottom: 10 }}>
                 Citations
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {response.citations.map((c, i) => (
+                {response.citations!.map((c, i) => (
                   <div key={i} style={{ padding: '10px 14px', background: 'var(--color-surface-2)', borderRadius: 'var(--radius-md)', borderLeft: '3px solid var(--color-accent)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-accent)' }}>{c.source}</span>
@@ -124,7 +124,18 @@ export default function RAGPage() {
                 ))}
               </div>
             </div>
-          )}
+          ) : (response.sources?.length ?? 0) > 0 ? (
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', marginBottom: 10 }}>
+                Sources
+              </div>
+              <ul style={{ paddingLeft: 20, color: 'var(--color-text-secondary)', fontSize: 13 }}>
+                {response.sources!.map((source, i) => (
+                  <li key={i}>{source}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       )}
 

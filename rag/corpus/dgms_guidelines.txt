@@ -1,0 +1,12 @@
+DGMS — Directorate General of Mine Safety (Industrial Plant Applicability Excerpt)
+
+Notification DGMS/Tech/15/2023 — Major Incident Reporting
+All major incidents involving compound risk (multiple simultaneous hazard factors) must be reported to the regional DGMS office within 24 hours of confirmation. Reports must include causal chain evidence and sensor trend data for the preceding 60 minutes.
+
+Clause 12 — Confined Space and Tank Entry
+No personnel shall enter a confined space without a valid confined space entry permit, continuous atmospheric monitoring, and a rescue plan on standby.
+
+Clause 18 — PPE Requirements for Hot Work
+Personnel performing hot work near gas zones must wear flame-resistant coveralls, safety goggles, leather gloves, and steel-toed boots as minimum PPE. Additional respiratory protection is required when LEL exceeds 0%.
+
+Maximum Permissible Exposure Limit (H2S): 10 ppm ceiling limit in confined spaces. Oxygen deficiency below 19.5% requires immediate evacuation.

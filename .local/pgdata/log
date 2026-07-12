@@ -1,0 +1,158 @@
+2026-07-12 11:43:56.954 GMT [4468] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 11:43:56.956 GMT [4468] LOG:  listening on IPv4 address "127.0.0.1", port 61387
+2026-07-12 11:43:57.009 GMT [22180] LOG:  database system was shut down at 2026-07-12 11:43:51 GMT
+2026-07-12 11:43:57.037 GMT [4468] LOG:  database system is ready to accept connections
+2026-07-12 11:43:57.122 GMT [4468] LOG:  received fast shutdown request
+2026-07-12 11:43:57.125 GMT [4468] LOG:  aborting any active transactions
+2026-07-12 11:43:57.127 GMT [4468] LOG:  background worker "logical replication launcher" (PID 2956) exited with exit code 1
+2026-07-12 11:43:57.129 GMT [2936] LOG:  shutting down
+2026-07-12 11:43:57.131 GMT [2936] LOG:  checkpoint starting: shutdown immediate
+2026-07-12 11:43:57.148 GMT [2936] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/147C6D8, redo lsn=0/147C6D8
+2026-07-12 11:43:57.154 GMT [4468] LOG:  database system is shut down
+2026-07-12 11:44:07.302 GMT [4604] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 11:44:07.303 GMT [4604] LOG:  listening on IPv4 address "127.0.0.1", port 61389
+2026-07-12 11:44:07.380 GMT [17604] LOG:  database system was shut down at 2026-07-12 11:43:57 GMT
+2026-07-12 11:44:07.416 GMT [4604] LOG:  database system is ready to accept connections
+2026-07-12 11:44:07.487 GMT [4604] LOG:  received fast shutdown request
+2026-07-12 11:44:07.490 GMT [4604] LOG:  aborting any active transactions
+2026-07-12 11:44:07.494 GMT [4604] LOG:  background worker "logical replication launcher" (PID 5276) exited with exit code 1
+2026-07-12 11:44:07.495 GMT [6420] LOG:  shutting down
+2026-07-12 11:44:07.496 GMT [6420] LOG:  checkpoint starting: shutdown immediate
+2026-07-12 11:44:07.515 GMT [6420] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.003 s, total=0.021 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/147C750, redo lsn=0/147C750
+2026-07-12 11:44:07.524 GMT [4604] LOG:  database system is shut down
+2026-07-12 11:44:17.017 GMT [6744] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 11:44:17.019 GMT [6744] LOG:  listening on IPv4 address "127.0.0.1", port 61422
+2026-07-12 11:44:17.088 GMT [19508] LOG:  database system was shut down at 2026-07-12 11:44:07 GMT
+2026-07-12 11:44:17.119 GMT [6744] LOG:  database system is ready to accept connections
+2026-07-12 11:44:17.280 GMT [6744] LOG:  received fast shutdown request
+2026-07-12 11:44:17.282 GMT [6744] LOG:  aborting any active transactions
+2026-07-12 11:44:17.287 GMT [6744] LOG:  background worker "logical replication launcher" (PID 15984) exited with exit code 1
+2026-07-12 11:44:17.288 GMT [9704] LOG:  shutting down
+2026-07-12 11:44:17.289 GMT [9704] LOG:  checkpoint starting: shutdown immediate
+2026-07-12 11:44:17.315 GMT [9704] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.027 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/147C7C8, redo lsn=0/147C7C8
+2026-07-12 11:44:17.324 GMT [6744] LOG:  database system is shut down
+2026-07-12 11:45:17.947 GMT [18284] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 11:45:17.948 GMT [18284] LOG:  listening on IPv4 address "127.0.0.1", port 59913
+2026-07-12 11:45:18.026 GMT [8132] LOG:  database system was shut down at 2026-07-12 11:44:17 GMT
+2026-07-12 11:45:18.061 GMT [18284] LOG:  database system is ready to accept connections
+2026-07-12 11:45:18.264 GMT [18284] LOG:  received fast shutdown request
+2026-07-12 11:45:18.266 GMT [18284] LOG:  aborting any active transactions
+2026-07-12 11:45:18.269 GMT [18284] LOG:  background worker "logical replication launcher" (PID 22520) exited with exit code 1
+2026-07-12 11:45:18.270 GMT [11248] LOG:  shutting down
+2026-07-12 11:45:18.272 GMT [11248] LOG:  checkpoint starting: shutdown immediate
+2026-07-12 11:45:18.308 GMT [11248] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.004 s, total=0.038 s; sync files=2, longest=0.003 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/147C840, redo lsn=0/147C840
+2026-07-12 11:45:18.315 GMT [18284] LOG:  database system is shut down
+2026-07-12 11:50:31.673 GMT [4572] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 11:50:31.674 GMT [4572] LOG:  listening on IPv4 address "127.0.0.1", port 58162
+2026-07-12 11:50:31.775 GMT [10420] LOG:  database system was shut down at 2026-07-12 11:45:18 GMT
+2026-07-12 11:50:31.825 GMT [4572] LOG:  database system is ready to accept connections
+2026-07-12 11:50:32.019 GMT [4572] LOG:  received fast shutdown request
+2026-07-12 11:50:32.022 GMT [4572] LOG:  aborting any active transactions
+2026-07-12 11:50:32.028 GMT [4572] LOG:  background worker "logical replication launcher" (PID 14420) exited with exit code 1
+2026-07-12 11:50:32.030 GMT [6420] LOG:  shutting down
+2026-07-12 11:50:32.031 GMT [6420] LOG:  checkpoint starting: shutdown immediate
+2026-07-12 11:50:32.054 GMT [6420] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.025 s; sync files=2, longest=0.004 s, average=0.003 s; distance=0 kB, estimate=0 kB; lsn=0/147C8B8, redo lsn=0/147C8B8
+2026-07-12 11:50:32.068 GMT [4572] LOG:  database system is shut down
+2026-07-12 11:52:07.292 GMT [19308] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 11:52:07.294 GMT [19308] LOG:  listening on IPv4 address "127.0.0.1", port 51209
+2026-07-12 11:52:07.409 GMT [11308] LOG:  database system was shut down at 2026-07-12 11:50:32 GMT
+2026-07-12 11:52:07.468 GMT [19308] LOG:  database system is ready to accept connections
+2026-07-12 11:52:15.036 GMT [3652] ERROR:  function create_hypertable(unknown, unknown, if_not_exists => boolean) does not exist at character 8
+2026-07-12 11:52:15.036 GMT [3652] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+2026-07-12 11:52:15.036 GMT [3652] STATEMENT:  SELECT create_hypertable('sensor_readings', 'recorded_at', if_not_exists => TRUE)
+2026-07-12 11:52:40.350 GMT [6344] ERROR:  role "sentinelgrid" does not exist
+2026-07-12 11:52:40.350 GMT [6344] STATEMENT:  REVOKE UPDATE ON evidence_snapshots FROM sentinelgrid
+2026-07-12 11:57:07.386 GMT [9596] LOG:  checkpoint starting: time
+2026-07-12 11:57:24.256 GMT [9596] LOG:  checkpoint complete: wrote 156 buffers (1.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=16.722 s, sync=0.125 s, total=16.872 s; sync files=165, longest=0.004 s, average=0.001 s; distance=848 kB, estimate=848 kB; lsn=0/1550C68, redo lsn=0/1550BD8
+2026-07-12 11:57:38.426 GMT [19956] ERROR:  duplicate key value violates unique constraint "workers_badge_id_key"
+2026-07-12 11:57:38.426 GMT [19956] DETAIL:  Key (badge_id)=(W001) already exists.
+2026-07-12 11:57:38.426 GMT [19956] STATEMENT:  INSERT INTO workers (plant_id, name, badge_id, role, phone, is_on_shift, id) VALUES ($1::UUID, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::BOOLEAN, $7::UUID), ($8::UUID, $9::VARCHAR, $10::VARCHAR, $11::VARCHAR, $12::VARCHAR, $13::BOOLEAN, $14::UUID), ($15::UUID, $16::VARCHAR, $17::VARCHAR, $18::VARCHAR, $19::VARCHAR, $20::BOOLEAN, $21::UUID), ($22::UUID, $23::VARCHAR, $24::VARCHAR, $25::VARCHAR, $26::VARCHAR, $27::BOOLEAN, $28::UUID) RETURNING workers.created_at, workers.id
+2026-07-12 11:58:31.040 GMT [19968] LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2026-07-12 11:58:31.731 GMT [19308] LOG:  received fast shutdown request
+2026-07-12 12:07:35.597 GMT [1576] LOG:  starting PostgreSQL 17.9 on x86_64-pc-mingw64, compiled by gcc.exe (x86_64-posix-seh-rev2, Built by MinGW-Builds project) 14.2.0, 64-bit
+2026-07-12 12:07:35.598 GMT [1576] LOG:  listening on IPv4 address "127.0.0.1", port 63139
+2026-07-12 12:07:35.710 GMT [18396] LOG:  database system was interrupted; last known up at 2026-07-12 11:57:24 GMT
+2026-07-12 12:07:42.043 GMT [18396] LOG:  could not open file "./log": sharing violation
+2026-07-12 12:07:42.043 GMT [18396] DETAIL:  Continuing to retry for 30 seconds.
+2026-07-12 12:07:42.043 GMT [18396] HINT:  You might have antivirus, backup, or similar software interfering with the database system.
+2026-07-12 12:08:09.091 GMT [18396] LOG:  syncing data directory (fsync), elapsed time: 33.37 s, current path: ./pg_commit_ts
+2026-07-12 12:08:09.320 GMT [18396] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-07-12 12:08:09.541 GMT [18396] LOG:  redo starts at 0/1550BD8
+2026-07-12 12:08:09.690 GMT [18396] LOG:  invalid record length at 0/1554310: expected at least 24, got 0
+2026-07-12 12:08:09.690 GMT [18396] LOG:  redo done at 0/15542E8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.15 s
+2026-07-12 12:08:09.717 GMT [7128] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-07-12 12:08:09.861 GMT [7128] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.013 s, sync=0.026 s, total=0.148 s; sync files=12, longest=0.008 s, average=0.003 s; distance=13 kB, estimate=13 kB; lsn=0/1554310, redo lsn=0/1554310
+2026-07-12 12:08:09.958 GMT [1576] LOG:  database system is ready to accept connections
+2026-07-12 12:13:09.876 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:13:11.788 GMT [7128] LOG:  checkpoint complete: wrote 18 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.883 s, sync=0.015 s, total=1.913 s; sync files=14, longest=0.002 s, average=0.001 s; distance=15 kB, estimate=15 kB; lsn=0/15581A0, redo lsn=0/1558110
+2026-07-12 12:18:09.792 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:18:14.763 GMT [7128] LOG:  checkpoint complete: wrote 45 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.916 s, sync=0.039 s, total=4.972 s; sync files=32, longest=0.002 s, average=0.002 s; distance=17 kB, estimate=17 kB; lsn=0/155C6D8, redo lsn=0/155C680
+2026-07-12 12:23:09.772 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:23:10.565 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.764 s, sync=0.012 s, total=0.793 s; sync files=8, longest=0.004 s, average=0.002 s; distance=14 kB, estimate=17 kB; lsn=0/155FF08, redo lsn=0/155FEB0
+2026-07-12 12:28:09.576 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:28:12.270 GMT [7128] LOG:  checkpoint complete: wrote 25 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.648 s, sync=0.028 s, total=2.695 s; sync files=25, longest=0.002 s, average=0.002 s; distance=22 kB, estimate=22 kB; lsn=0/1565A40, redo lsn=0/15659E8
+2026-07-12 12:33:09.272 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:33:09.834 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.539 s, sync=0.009 s, total=0.563 s; sync files=6, longest=0.003 s, average=0.002 s; distance=16 kB, estimate=22 kB; lsn=0/1569A78, redo lsn=0/1569A20
+2026-07-12 12:38:09.838 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:38:10.857 GMT [7128] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.961 s, sync=0.014 s, total=1.019 s; sync files=10, longest=0.003 s, average=0.002 s; distance=34 kB, estimate=34 kB; lsn=0/1572468, redo lsn=0/1572410
+2026-07-12 12:43:09.863 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:43:10.474 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.531 s, sync=0.039 s, total=0.611 s; sync files=6, longest=0.032 s, average=0.007 s; distance=19 kB, estimate=33 kB; lsn=0/1577410, redo lsn=0/15773B8
+2026-07-12 12:48:09.474 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:48:10.085 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.524 s, sync=0.042 s, total=0.612 s; sync files=6, longest=0.032 s, average=0.007 s; distance=21 kB, estimate=31 kB; lsn=0/157C880, redo lsn=0/157C828
+2026-07-12 12:53:09.086 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:53:10.106 GMT [7128] LOG:  checkpoint complete: wrote 10 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.964 s, sync=0.012 s, total=1.021 s; sync files=7, longest=0.003 s, average=0.002 s; distance=23 kB, estimate=30 kB; lsn=0/1582658, redo lsn=0/1582600
+2026-07-12 12:58:09.105 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 12:58:09.924 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.735 s, sync=0.042 s, total=0.820 s; sync files=6, longest=0.033 s, average=0.007 s; distance=17 kB, estimate=29 kB; lsn=0/1586C18, redo lsn=0/1586BC0
+2026-07-12 13:03:09.936 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 13:03:10.735 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.750 s, sync=0.039 s, total=0.799 s; sync files=6, longest=0.031 s, average=0.007 s; distance=18 kB, estimate=28 kB; lsn=0/158B558, redo lsn=0/158B500
+2026-07-12 13:08:09.740 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 13:08:11.431 GMT [7128] LOG:  checkpoint complete: wrote 16 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.606 s, sync=0.042 s, total=1.691 s; sync files=10, longest=0.031 s, average=0.005 s; distance=40 kB, estimate=40 kB; lsn=0/1595928, redo lsn=0/15958D0
+2026-07-12 13:13:09.442 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 13:13:10.038 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.545 s, sync=0.010 s, total=0.596 s; sync files=6, longest=0.003 s, average=0.002 s; distance=20 kB, estimate=38 kB; lsn=0/159AB40, redo lsn=0/159AAE8
+2026-07-12 13:18:09.034 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 13:18:09.631 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.547 s, sync=0.008 s, total=0.598 s; sync files=6, longest=0.002 s, average=0.002 s; distance=21 kB, estimate=37 kB; lsn=0/15A00E0, redo lsn=0/15A0088
+2026-07-12 13:23:09.637 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 13:23:10.200 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.536 s, sync=0.012 s, total=0.564 s; sync files=6, longest=0.004 s, average=0.002 s; distance=23 kB, estimate=35 kB; lsn=0/15A5FD0, redo lsn=0/15A5F78
+2026-07-12 13:28:09.214 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 13:28:09.817 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.537 s, sync=0.039 s, total=0.603 s; sync files=6, longest=0.032 s, average=0.007 s; distance=25 kB, estimate=34 kB; lsn=0/15AC5E8, redo lsn=0/15AC590
+2026-07-12 14:10:14.876 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:10:15.486 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.531 s, sync=0.038 s, total=0.610 s; sync files=6, longest=0.032 s, average=0.007 s; distance=26 kB, estimate=33 kB; lsn=0/15B2F70, redo lsn=0/15B2F18
+2026-07-12 14:15:14.497 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:15:15.059 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.540 s, sync=0.009 s, total=0.563 s; sync files=6, longest=0.002 s, average=0.002 s; distance=27 kB, estimate=33 kB; lsn=0/15B9EF0, redo lsn=0/15B9E98
+2026-07-12 14:20:14.065 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:20:15.274 GMT [7128] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.164 s, sync=0.023 s, total=1.210 s; sync files=10, longest=0.009 s, average=0.003 s; distance=52 kB, estimate=52 kB; lsn=0/15C6FE0, redo lsn=0/15C6F88
+2026-07-12 14:25:14.277 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:25:15.081 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.754 s, sync=0.040 s, total=0.804 s; sync files=7, longest=0.031 s, average=0.006 s; distance=30 kB, estimate=50 kB; lsn=0/15CEA40, redo lsn=0/15CE9E8
+2026-07-12 14:30:14.082 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:30:14.719 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.546 s, sync=0.039 s, total=0.638 s; sync files=6, longest=0.032 s, average=0.007 s; distance=24 kB, estimate=47 kB; lsn=0/15D4E10, redo lsn=0/15D4DB8
+2026-07-12 14:35:14.726 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:35:15.307 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.562 s, sync=0.009 s, total=0.582 s; sync files=6, longest=0.003 s, average=0.002 s; distance=26 kB, estimate=45 kB; lsn=0/15DB660, redo lsn=0/15DB608
+2026-07-12 14:40:14.311 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:40:14.933 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.540 s, sync=0.040 s, total=0.622 s; sync files=6, longest=0.032 s, average=0.007 s; distance=28 kB, estimate=43 kB; lsn=0/15E2830, redo lsn=0/15E27D8
+2026-07-12 14:45:14.934 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:45:15.565 GMT [7128] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.549 s, sync=0.040 s, total=0.632 s; sync files=6, longest=0.031 s, average=0.007 s; distance=30 kB, estimate=42 kB; lsn=0/15EA130, redo lsn=0/15EA0D8
+2026-07-12 14:50:14.570 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 14:50:15.508 GMT [7128] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.859 s, sync=0.039 s, total=0.938 s; sync files=6, longest=0.032 s, average=0.007 s; distance=32 kB, estimate=41 kB; lsn=0/15F2168, redo lsn=0/15F2110
+2026-07-12 15:01:58.059 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 15:01:58.761 GMT [7128] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.646 s, sync=0.014 s, total=0.702 s; sync files=6, longest=0.005 s, average=0.003 s; distance=33 kB, estimate=40 kB; lsn=0/15FA7B0, redo lsn=0/15FA758
+2026-07-12 16:46:10.340 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 16:46:11.724 GMT [7128] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.345 s, sync=0.022 s, total=1.385 s; sync files=9, longest=0.005 s, average=0.003 s; distance=57 kB, estimate=57 kB; lsn=0/1608C08, redo lsn=0/1608BB0
+2026-07-12 16:51:10.726 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 16:51:11.626 GMT [7128] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.874 s, sync=0.011 s, total=0.901 s; sync files=6, longest=0.005 s, average=0.002 s; distance=40 kB, estimate=55 kB; lsn=0/1612C30, redo lsn=0/1612BD8
+2026-07-12 16:56:10.641 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 16:56:11.765 GMT [7128] LOG:  checkpoint complete: wrote 11 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.098 s, sync=0.013 s, total=1.124 s; sync files=7, longest=0.005 s, average=0.002 s; distance=38 kB, estimate=53 kB; lsn=0/161C700, redo lsn=0/161C6A8
+2026-07-12 17:01:10.780 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:01:11.683 GMT [7128] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.867 s, sync=0.013 s, total=0.904 s; sync files=6, longest=0.003 s, average=0.003 s; distance=32 kB, estimate=51 kB; lsn=0/1624940, redo lsn=0/16248E8
+2026-07-12 17:06:10.695 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:06:11.484 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.765 s, sync=0.010 s, total=0.790 s; sync files=6, longest=0.003 s, average=0.002 s; distance=32 kB, estimate=49 kB; lsn=0/162CAB0, redo lsn=0/162CA58
+2026-07-12 17:11:10.495 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:11:11.309 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.763 s, sync=0.016 s, total=0.814 s; sync files=6, longest=0.005 s, average=0.003 s; distance=33 kB, estimate=48 kB; lsn=0/1635218, redo lsn=0/16351C0
+2026-07-12 17:16:10.316 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:16:11.258 GMT [7128] LOG:  checkpoint complete: wrote 9 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.880 s, sync=0.018 s, total=0.943 s; sync files=6, longest=0.006 s, average=0.003 s; distance=35 kB, estimate=46 kB; lsn=0/163E0F8, redo lsn=0/163E0A0
+2026-07-12 17:21:10.260 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:21:11.609 GMT [7128] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.313 s, sync=0.018 s, total=1.349 s; sync files=8, longest=0.005 s, average=0.003 s; distance=57 kB, estimate=57 kB; lsn=0/164C600, redo lsn=0/164C5A8
+2026-07-12 17:26:10.612 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:26:11.315 GMT [7128] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.661 s, sync=0.023 s, total=0.704 s; sync files=6, longest=0.012 s, average=0.004 s; distance=30 kB, estimate=54 kB; lsn=0/1654130, redo lsn=0/16540D8
+2026-07-12 17:31:10.330 GMT [7128] LOG:  checkpoint starting: time
+2026-07-12 17:31:11.124 GMT [7128] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.769 s, sync=0.011 s, total=0.795 s; sync files=6, longest=0.003 s, average=0.002 s; distance=33 kB, estimate=52 kB; lsn=0/165C710, redo lsn=0/165C680

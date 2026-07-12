@@ -50,9 +50,15 @@ def upgrade() -> None:
     )
     op.create_index("ix_evidence_snapshots_alert_id", "evidence_snapshots", ["alert_id"])
 
-    # Revoke UPDATE on evidence_snapshots for forensic integrity
-    # (this uses the 'sentinelgrid' role — adjust role name if needed)
-    op.execute("REVOKE UPDATE ON evidence_snapshots FROM sentinelgrid")
+    # Revoke UPDATE on evidence_snapshots for forensic integrity (production role only)
+    from sqlalchemy import text
+
+    conn = op.get_bind()
+    has_role = conn.execute(
+        text("SELECT 1 FROM pg_roles WHERE rolname = 'sentinelgrid'")
+    ).fetchone()
+    if has_role:
+        op.execute("REVOKE UPDATE ON evidence_snapshots FROM sentinelgrid")
 
     # audit_logs
     op.create_table(

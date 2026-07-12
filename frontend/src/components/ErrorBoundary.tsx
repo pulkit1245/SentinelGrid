@@ -38,7 +38,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             <p style={{ fontSize: 14, color: 'var(--color-text-secondary)', marginBottom: 24 }}>
               An unexpected error occurred in this component. Our team has been notified.
             </p>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <div style={{ background: 'var(--color-surface-2)', padding: 12, borderRadius: 8, fontSize: 12, fontFamily: 'monospace', color: 'var(--color-critical)', textAlign: 'left', marginBottom: 24, overflowX: 'auto' }}>
                 {this.state.error.toString()}
               </div>

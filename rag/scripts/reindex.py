@@ -84,10 +84,8 @@ class BM25SparseIndexer:
         return results
 
 if __name__ == "__main__":
-    import sys
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from chunking import DocumentChunker
-    from embeddings import VectorDatabaseBuilder
+    from rag.chunking import DocumentChunker
+    from rag.embeddings import VectorDatabaseBuilder
 
     print("=== Starting Reindexing Pipeline ===")
     chunker = DocumentChunker()
@@ -95,13 +93,13 @@ if __name__ == "__main__":
     chunks = chunker.process_corpus(corpus_dir)
     
     print("Building Qdrant Vector Index...")
-    # Assume Qdrant is running on localhost for reindex script
     qdrant_url = os.environ.get("QDRANT_URL", "http://localhost:6333")
+    qdrant_path = os.environ.get("QDRANT_PATH")
     try:
-        vector_db = VectorDatabaseBuilder(qdrant_url=qdrant_url)
+        vector_db = VectorDatabaseBuilder(qdrant_url=qdrant_url, qdrant_path=qdrant_path)
         vector_db.embed_and_index(chunks)
     except Exception as e:
-        print(f"Warning: Could not connect to Qdrant ({e}). Skipping dense index.")
+        print(f"Warning: Could not build Qdrant index ({e}). BM25-only mode.")
 
     print("Building BM25 Sparse Index...")
     bm25 = BM25SparseIndexer()

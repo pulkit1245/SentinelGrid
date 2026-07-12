@@ -56,15 +56,46 @@ class DocumentChunker:
             
         return chunk_dicts
 
+    def chunk_text_file(self, filepath: str, document_id: str | None = None) -> List[Dict[str, Any]]:
+        filename = os.path.basename(filepath)
+        doc_id = document_id or filename.replace(".txt", "").replace(".md", "")
+        print(f"Parsing text: {filename}...")
+        try:
+            with open(filepath, encoding="utf-8") as f:
+                content = f.read()
+        except OSError as e:
+            print(f"Error reading {filename}: {e}")
+            return []
+
+        chunks = self._split_text(content)
+        return [
+            {
+                "id": f"{doc_id}_chunk_{idx}",
+                "text": text,
+                "metadata": {
+                    "source_type": "text_document",
+                    "document_id": doc_id,
+                    "chunk_index": idx,
+                    "filepath": filepath,
+                },
+            }
+            for idx, text in enumerate(chunks)
+        ]
+
     def process_corpus(self, corpus_dir: str) -> List[Dict[str, Any]]:
-        all_chunks = []
-        
-        if os.path.exists(corpus_dir):
-            for file in os.listdir(corpus_dir):
-                if file.lower().endswith('.pdf'):
-                    filepath = os.path.join(corpus_dir, file)
-                    all_chunks.extend(self.chunk_pdf(filepath))
-                    
+        all_chunks: List[Dict[str, Any]] = []
+
+        if not os.path.exists(corpus_dir):
+            return all_chunks
+
+        for file in sorted(os.listdir(corpus_dir)):
+            filepath = os.path.join(corpus_dir, file)
+            lower = file.lower()
+            if lower.endswith(".pdf"):
+                all_chunks.extend(self.chunk_pdf(filepath))
+            elif lower.endswith((".txt", ".md")):
+                all_chunks.extend(self.chunk_text_file(filepath))
+
         return all_chunks
 
 if __name__ == "__main__":

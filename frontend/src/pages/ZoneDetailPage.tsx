@@ -6,15 +6,7 @@ import { api } from '../services/api'
 import { useAlerts } from '../hooks/useAlerts'
 import { AlertFeed } from '../components/AlertFeed'
 import { useAuth } from '../hooks/useAuth'
-import { SensorSparkline } from '../components/SensorSparkline'
 import { PermitBadge } from '../components/PermitBadge'
-
-const SENSOR_ICONS: Record<string, React.ReactNode> = {
-  gas: <Wind size={14} />,
-  temperature: <Thermometer size={14} />,
-  pressure: <Activity size={14} />,
-  vibration: <Zap size={14} />,
-}
 
 export default function ZoneDetailPage() {
   const { zoneId } = useParams<{ zoneId: string }>()

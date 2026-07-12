@@ -26,7 +26,7 @@ export function useAlerts(zoneId?: string) {
   useEffect(() => {
     const unsub = wsManager.subscribe((msg: WSMessage) => {
       if (msg.type === 'new_alert') {
-        const alert = msg.payload as Alert
+        const alert = msg.payload as unknown as Alert
         if (!zoneId || alert.zone_id === zoneId) {
           setAlerts(prev => [alert, ...prev])
         }

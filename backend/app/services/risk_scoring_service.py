@@ -3,9 +3,7 @@ from __future__ import annotations
 import logging
 import uuid
 
-import redis.asyncio as aioredis
-
-from app.core.config import settings
+from app.core.redis_client import get_async_redis
 from app.repositories.zone_repository import ZoneRepository
 
 logger = logging.getLogger(__name__)
@@ -29,7 +27,7 @@ class RiskScoringService:
 
         # Cache in Redis (TTL 90 seconds — rolling updates keep it fresh)
         try:
-            r = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+            r = get_async_redis(decode_responses=True)
             await r.setex(f"{ZONE_RISK_CACHE_PREFIX}{zone_id}", 90, str(score))
             await r.aclose()
         except Exception as exc:
@@ -40,7 +38,7 @@ class RiskScoringService:
 
     async def get_cached_risk_score(self, zone_id: uuid.UUID) -> int | None:
         try:
-            r = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+            r = get_async_redis(decode_responses=True)
             val = await r.get(f"{ZONE_RISK_CACHE_PREFIX}{zone_id}")
             await r.aclose()
             return int(val) if val is not None else None

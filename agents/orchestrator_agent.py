@@ -34,6 +34,17 @@ from langgraph.graph import StateGraph, END
 from .shared_blackboard import Blackboard
 from .compound_risk_agent import CompoundRiskAgent, CompoundRiskFinding
 from .permit_intelligence_agent import PermitIntelligenceAgent, PermitViolation
+
+try:
+    from .incident_rag_agent import IncidentRagAgent
+except Exception:  # pragma: no cover
+    IncidentRagAgent = None  # type: ignore[misc, assignment]
+
+try:
+    from .compliance_audit_agent import ComplianceAuditAgent
+except Exception:  # pragma: no cover
+    ComplianceAuditAgent = None  # type: ignore[misc, assignment]
+
 from simulator.zones import STATUTORY_THRESHOLDS
 
 MIN_CORROBORATING_SIGNALS = 2
@@ -44,9 +55,11 @@ class OrchestratorState(TypedDict, total=False):
     hard_rule_violation: Optional[dict]
     compound_finding: Optional[CompoundRiskFinding]
     permit_violations: List[PermitViolation]
+    incident_context: Optional[dict]
+    compliance_violations: List[dict]
     corroborating_signals: List[str]
     decision: str  # "critical" | "advisory" | "clear"
-    graph_path: dict
+    graph_path: list
     dispatched: bool
 
 
@@ -55,21 +68,76 @@ class AlertDecision:
     zone_id: str
     decision: str
     corroborating_signals: List[str]
-    graph_path: dict
+    graph_path: list
 
 
 class OrchestratorAgent:
     def __init__(self, blackboard: Blackboard,
                  compound_risk_agent: Optional[CompoundRiskAgent] = None,
                  permit_intelligence_agent: Optional[PermitIntelligenceAgent] = None,
+                 incident_rag_agent: Optional["IncidentRagAgent"] = None,
+                 compliance_audit_agent: Optional["ComplianceAuditAgent"] = None,
                  alert_service: Optional[Callable[[AlertDecision], None]] = None,
                  min_corroborating_signals: int = MIN_CORROBORATING_SIGNALS):
         self.bb = blackboard
         self.compound_risk_agent = compound_risk_agent or CompoundRiskAgent(blackboard)
         self.permit_intelligence_agent = permit_intelligence_agent or PermitIntelligenceAgent(blackboard)
+        self.incident_rag_agent = incident_rag_agent or (IncidentRagAgent() if IncidentRagAgent else None)
+        self.compliance_audit_agent = compliance_audit_agent or (ComplianceAuditAgent() if ComplianceAuditAgent else None)
         self.alert_service = alert_service
         self.min_corroborating_signals = min_corroborating_signals
         self.graph = self._build_graph()
+
+    def _build_graph_path(self, state: OrchestratorState) -> list:
+        """Transform agent outputs into the shared alert graph_path list format."""
+        path: list = []
+        zone_id = state["zone_id"]
+
+        if state.get("hard_rule_violation"):
+            hr = state["hard_rule_violation"]
+            path.append(
+                {
+                    "node": f"Sensor:{hr['sensor_type']}",
+                    "rel": "EXCEEDS_THRESHOLD",
+                    "next": zone_id,
+                    "value": hr["value"],
+                    "threshold": hr["threshold"],
+                }
+            )
+
+        cf = state.get("compound_finding")
+        if cf is not None and cf.triggered:
+            for reason in cf.reasons:
+                path.append({"node": zone_id, "rel": "COMPOUND_RISK", "next": reason})
+
+        for violation in state.get("permit_violations", []):
+            path.append(
+                {
+                    "node": violation.permit_id,
+                    "rel": "PERMIT_VIOLATION",
+                    "next": zone_id,
+                    "value": None,
+                    "threshold": None,
+                }
+            )
+
+        incident = state.get("incident_context")
+        if incident:
+            path.append(
+                {
+                    "node": incident.get("incident_id", "historical_incident"),
+                    "rel": "HISTORICALLY_CORRELATED_WITH",
+                    "next": zone_id,
+                }
+            )
+
+        for violation in state.get("compliance_violations", []):
+            path.append({"node": violation.get("rule", "compliance_rule"), "rel": "VIOLATES", "next": zone_id})
+
+        if not path:
+            path.append({"node": zone_id, "rel": "MONITORED", "next": zone_id})
+
+        return path
 
     # ---- LangGraph nodes ----
 
@@ -91,6 +159,21 @@ class OrchestratorAgent:
         state["compound_finding"] = next((f for f in findings if f.zone_id == zone_id), None)
         all_permit_violations = self.permit_intelligence_agent.revalidate_all()
         state["permit_violations"] = [v for v in all_permit_violations if v.zone_id == zone_id]
+
+        snap = self.bb.snapshot(zone_id)
+        risk_score = int(snap.properties.get("current_risk_score", 0))
+        if self.incident_rag_agent and risk_score >= 50:
+            state["incident_context"] = self.incident_rag_agent.evaluate_zone(
+                zone_id, risk_score, {"hazard_class": snap.properties.get("hazard_class", "general")}
+            )
+        else:
+            state["incident_context"] = None
+
+        if self.compliance_audit_agent:
+            state["compliance_violations"] = self.compliance_audit_agent.audit_zone(zone_id)
+        else:
+            state["compliance_violations"] = []
+
         return state
 
     def _arbitrate_node(self, state: OrchestratorState) -> OrchestratorState:
@@ -110,6 +193,10 @@ class OrchestratorAgent:
             signals.append("permit_critical_violation")
         elif any(v.severity == "warning" for v in state.get("permit_violations", [])):
             signals.append("permit_warning")
+        if state.get("incident_context"):
+            signals.append("incident_rag_similarity")
+        if state.get("compliance_violations"):
+            signals.append("compliance_audit_gap")
 
         state["corroborating_signals"] = signals
 
@@ -123,16 +210,7 @@ class OrchestratorAgent:
 
     def _dispatch_node(self, state: OrchestratorState) -> OrchestratorState:
         zone_id = state["zone_id"]
-        snap = self.bb.snapshot(zone_id)
-        graph_path = {
-            "zone_id": zone_id,
-            "zone_properties": snap.properties,
-            "active_permits": [p.__dict__ for p in snap.active_permits],
-            "hard_rule_violation": state.get("hard_rule_violation"),
-            "compound_finding_reasons": (state["compound_finding"].reasons
-                                          if state.get("compound_finding") else []),
-            "permit_violations": [v.__dict__ for v in state.get("permit_violations", [])],
-        }
+        graph_path = self._build_graph_path(state)
         state["graph_path"] = graph_path
 
         if state["decision"] == "critical" and self.alert_service is not None:

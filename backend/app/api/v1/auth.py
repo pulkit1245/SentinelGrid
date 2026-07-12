@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -48,7 +48,11 @@ async def login(body: LoginRequest, response: Response, db: AsyncSession = Depen
 
 
 @router.post("/refresh", response_model=TokenResponse)
-async def refresh(response: Response, refresh_token: str | None = None, db: AsyncSession = Depends(get_db)):
+async def refresh(
+    response: Response,
+    refresh_token: str | None = Cookie(None, alias="refresh_token"),
+    db: AsyncSession = Depends(get_db),
+):
     """Silently issue a new access token using the HttpOnly refresh cookie."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired refresh token"

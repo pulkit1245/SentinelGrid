@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Activity, AlertTriangle, CheckCircle, Shield, Zap, FileText } from 'lucide-react'
+import { Activity, AlertTriangle, Shield, Zap } from 'lucide-react'
 import { useZones } from '../hooks/useZones'
 import { useAlerts } from '../hooks/useAlerts'
 import { ZoneCard } from '../components/ZoneCard'

@@ -29,7 +29,7 @@ export function useZones() {
   useEffect(() => {
     const unsub = wsManager.subscribe((msg: WSMessage) => {
       if (msg.type === 'zone_risk_update' && msg.payload) {
-        const updated = msg.payload as Zone
+        const updated = msg.payload as unknown as Zone
         setZones(prev => prev.map(z => z.id === updated.id ? { ...z, ...updated } : z))
       }
     })

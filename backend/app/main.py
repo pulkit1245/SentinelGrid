@@ -4,7 +4,11 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
-import sentry_sdk
+try:
+    import sentry_sdk
+except ImportError:  # pragma: no cover
+    sentry_sdk = None  # type: ignore[assignment]
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -14,7 +18,7 @@ from app.core.logging import configure_logging
 from app.middlewares.error_handler import register_error_handlers
 
 # Import all routers
-from app.api.v1 import auth, zones, sensors, permits, alerts, compliance, rag, graph, dashboard_ws
+from app.api.v1 import auth, zones, sensors, permits, alerts, compliance, rag, graph, dashboard_ws, events
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +29,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     configure_logging()
     logger.info("SentinelGrid backend starting up", extra={"environment": settings.ENVIRONMENT})
 
-    # Initialize Sentry
-    if settings.SENTRY_DSN:
+    if sentry_sdk and settings.SENTRY_DSN:
         sentry_sdk.init(dsn=settings.SENTRY_DSN, traces_sample_rate=0.2)
         logger.info("Sentry initialized")
 
@@ -67,6 +70,7 @@ def create_app() -> FastAPI:
     app.include_router(compliance.router, prefix=prefix, tags=["compliance"])
     app.include_router(rag.router, prefix=prefix, tags=["rag"])
     app.include_router(graph.router, prefix=prefix, tags=["graph"])
+    app.include_router(events.router, prefix=prefix, tags=["events"])
     app.include_router(dashboard_ws.router, tags=["websocket"])
 
     # ── Health Check ───────────────────────────────────────────────────────────

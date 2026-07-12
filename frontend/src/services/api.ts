@@ -24,6 +24,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     try {
       const { access_token } = await authApi.refreshToken()
       _accessToken = access_token
+      localStorage.setItem('sg_access_token', access_token)
       headers['Authorization'] = `Bearer ${access_token}`
       resp = await fetch(`${BASE}${path}`, { ...options, headers, credentials: 'include' })
     } catch {
@@ -77,17 +78,18 @@ export const api = {
     request<RAGResponse>('/rag/query', { method: 'POST', body: JSON.stringify({ question }) }),
 
   // ── Compliance ─────────────────────────────────────────────────────────────
-  getComplianceReport: async (alertId: string): Promise<Blob> => {
+  getComplianceReport: async (alertId: string): Promise<string> => {
     const headers: Record<string, string> = {}
     if (_accessToken) headers['Authorization'] = `Bearer ${_accessToken}`
-    
-    let resp = await fetch(`${BASE}/compliance/report/${alertId}`, { headers })
+
+    let resp = await fetch(`${BASE}/compliance/report/${alertId}`, { headers, credentials: 'include' })
     if (resp.status === 401 && _accessToken) {
       try {
         const { access_token } = await authApi.refreshToken()
         _accessToken = access_token
+        localStorage.setItem('sg_access_token', access_token)
         headers['Authorization'] = `Bearer ${access_token}`
-        resp = await fetch(`${BASE}/compliance/report/${alertId}`, { headers })
+        resp = await fetch(`${BASE}/compliance/report/${alertId}`, { headers, credentials: 'include' })
       } catch {
         _accessToken = null
         localStorage.removeItem('sg_access_token')
@@ -95,8 +97,11 @@ export const api = {
         throw new Error('Session expired')
       }
     }
-    
-    if (!resp.ok) throw new Error('Failed to generate PDF report')
-    return resp.blob()
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}))
+      throw new Error(err.detail || 'Failed to generate compliance report')
+    }
+    return resp.text()
   },
 }

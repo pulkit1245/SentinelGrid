@@ -1,0 +1,1 @@
+C:/Users/Anupriya/AppData/Local/Programs/Python/Python313/Lib/site-packages/pgembed/pginstall/bin/postgres.exe "-D" "D:/projects/SentinelGrid/SentinelGrid/.local/pgdata" "-h" "127.0.0.1" "-p" "63139"

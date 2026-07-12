@@ -31,11 +31,15 @@ def _now_iso() -> str:
 
 class IngestClient:
     def __init__(self, base_url: str = DEFAULT_BASE_URL, offline: bool = False,
-                 timeout: float = 2.0, retries: int = 2):
+                 timeout: float = 2.0, retries: int = 2,
+                 service_token: Optional[str] = None):
         self.base_url = base_url.rstrip("/")
         self.offline = offline or requests is None
         self.timeout = timeout
         self.retries = retries
+        self.service_token = service_token or os.environ.get(
+            "SENTINELGRID_SERVICE_TOKEN", os.environ.get("SERVICE_TOKEN", "dev-service-token")
+        )
         self._offline_files = {}
 
     def _offline_log(self, path: str, payload: dict):
@@ -50,9 +54,10 @@ class IngestClient:
             return True
 
         url = f"{self.base_url}{path}"
+        headers = {"X-Service-Token": self.service_token}
         for attempt in range(self.retries + 1):
             try:
-                resp = requests.post(url, json=payload, timeout=self.timeout)
+                resp = requests.post(url, json=payload, headers=headers, timeout=self.timeout)
                 if resp.status_code < 300:
                     return True
                 print(f"[ingest] {path} -> HTTP {resp.status_code}: {resp.text[:200]}")

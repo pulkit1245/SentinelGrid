@@ -23,6 +23,12 @@ from typing import Callable, Optional
 from ..features import RollingFeatureStore
 from ...ml.anomaly.isolation_forest import AnomalyDetectorRegistry
 from ...utils.time_alignment import bucket_start
+from ...core.ingest_queue import (
+    DEAD_LETTER_LIST_KEY,
+    DEAD_LETTER_STREAM_KEY,
+    INGEST_LIST_KEY,
+    streams_supported,
+)
 
 logger = logging.getLogger("sentinelgrid.enrichment")
 
@@ -68,8 +74,12 @@ class EnrichmentWorker:
         self.anomaly_registry = anomaly_registry or AnomalyDetectorRegistry()
         self.on_feature_update = on_feature_update
         self.metrics = EnrichmentMetrics()
+        self._use_list = not streams_supported(self.redis)
 
-        self._ensure_group()
+        if self._use_list:
+            logger.info("Redis streams unavailable — using list queue (%s)", INGEST_LIST_KEY)
+        else:
+            self._ensure_group()
 
     def _ensure_group(self):
         try:
@@ -88,12 +98,21 @@ class EnrichmentWorker:
         return decoded
 
     def _dead_letter(self, entry_id, raw_fields: dict, reason: str):
-        entry_id_str = entry_id.decode("utf-8") if isinstance(entry_id, bytes) else entry_id
+        entry_id_str = entry_id.decode("utf-8") if isinstance(entry_id, bytes) else str(entry_id)
         payload = {**self._decode_raw_fields(raw_fields), "_dlq_reason": reason,
                    "_dlq_original_id": entry_id_str}
-        self.redis.xadd(DEAD_LETTER_STREAM_KEY, {"payload": json.dumps(payload)})
+        encoded = json.dumps(payload)
+        if self._use_list:
+            self.redis.lpush(DEAD_LETTER_LIST_KEY, encoded)
+        else:
+            self.redis.xadd(DEAD_LETTER_STREAM_KEY, {"payload": encoded})
         self.metrics.dead_lettered += 1
         logger.warning("Dead-lettered event %s: %s", entry_id_str, reason)
+
+    def _dead_letter_payload(self, payload: str, reason: str):
+        self.redis.lpush(DEAD_LETTER_LIST_KEY, json.dumps({"payload": payload, "_dlq_reason": reason}))
+        self.metrics.dead_lettered += 1
+        logger.warning("Dead-lettered list event: %s", reason)
 
     def _parse_event(self, raw_fields: dict) -> dict:
         payload_str = raw_fields.get("payload") or raw_fields.get(b"payload")
@@ -170,8 +189,47 @@ class EnrichmentWorker:
                                 entry_id, exc, backoff)
                 time.sleep(backoff)
 
+    def _process_list_payload(self, payload: str) -> bool:
+        for attempt in range(MAX_RETRIES + 1):
+            try:
+                event = json.loads(payload)
+                if "event_type" not in event:
+                    raise ValueError("missing 'event_type'")
+            except (ValueError, json.JSONDecodeError) as exc:
+                self._dead_letter_payload(payload, f"parse_error: {exc}")
+                return True
+
+            try:
+                self._process_event(event)
+                self.metrics.processed += 1
+                return True
+            except Exception as exc:  # noqa: BLE001
+                if attempt == MAX_RETRIES:
+                    self._dead_letter_payload(payload, f"max_retries_exceeded: {exc}")
+                    return True
+                self.metrics.retried += 1
+                backoff = RETRY_BACKOFF_BASE_S * (2 ** attempt)
+                logger.warning("Retrying list event after error: %s (backoff=%.2fs)", exc, backoff)
+                time.sleep(backoff)
+        return False
+
     def poll_once(self, count: int = 50, block_ms: int = 2000) -> int:
         """Reads up to `count` new entries, processes them, returns how many were read."""
+        if self._use_list:
+            n = 0
+            for _ in range(count):
+                payload = self.redis.rpop(INGEST_LIST_KEY)
+                if not payload:
+                    break
+                if isinstance(payload, bytes):
+                    payload = payload.decode("utf-8")
+                if self._process_list_payload(payload):
+                    n += 1
+            if n == 0:
+                time.sleep(block_ms / 1000)
+            self._update_queue_depth()
+            return n
+
         resp = self.redis.xreadgroup(
             self.group, self.consumer_name,
             {self.stream_key: ">"}, count=count, block=block_ms,
@@ -190,8 +248,11 @@ class EnrichmentWorker:
 
     def _update_queue_depth(self):
         try:
-            pending = self.redis.xpending(self.stream_key, self.group)
-            self.metrics.queue_depth = pending["pending"] if pending else 0
+            if self._use_list:
+                self.metrics.queue_depth = self.redis.llen(INGEST_LIST_KEY)
+            else:
+                pending = self.redis.xpending(self.stream_key, self.group)
+                self.metrics.queue_depth = pending["pending"] if pending else 0
         except Exception:  # noqa: BLE001
             pass  # metrics are best-effort; never crash the worker over this
 
@@ -209,7 +270,7 @@ class EnrichmentWorker:
 
 def run_from_cli():  # pragma: no cover
     import argparse
-    import redis as redis_lib
+    from app.core.redis_client import get_sync_redis
 
     logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser()
@@ -217,7 +278,7 @@ def run_from_cli():  # pragma: no cover
     parser.add_argument("--consumer-name", default="worker-1")
     args = parser.parse_args()
 
-    client = redis_lib.from_url(args.redis_url, decode_responses=False)
+    client = get_sync_redis(decode_responses=False)
     worker = EnrichmentWorker(client, consumer_name=args.consumer_name)
     worker.run_forever()
 

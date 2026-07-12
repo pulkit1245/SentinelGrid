@@ -4,12 +4,13 @@ import uuid
 from datetime import datetime, timezone
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.middlewares.auth_middleware import get_current_user, require_role, verify_service_token
 from app.models.base import get_db
 from app.repositories.alert_repository import AlertRepository
+from app.repositories.zone_repository import ZoneRepository
 from app.schemas.alert_schema import AlertConfirmResponse, AlertCreate, AlertResponse
 from app.schemas.auth_schema import UserInToken
 from app.services.notification_service import notification_service
@@ -55,6 +56,7 @@ async def get_alert(
 @router.patch("/{alert_id}/confirm", response_model=AlertConfirmResponse)
 async def confirm_alert(
     alert_id: uuid.UUID,
+    background_tasks: BackgroundTasks,
     current_user: Annotated[UserInToken, Depends(require_role("plant_admin"))],
     db: AsyncSession = Depends(get_db),
 ):
@@ -92,15 +94,27 @@ async def confirm_alert(
         details={"severity": alert.severity},
     )
 
-    # Dispatch Twilio notification (fire-and-forget, errors are swallowed)
-    import asyncio
-    asyncio.create_task(
-        notification_service.send_alert_notification(
-            alert_id=str(alert_id),
-            zone_name=str(alert.zone_id),
-            severity=alert.severity,
-            recipients=[],  # TODO: pull from zone/plant config
-        )
+    # Dispatch Twilio notification (errors are swallowed inside the service)
+    zone_repo = ZoneRepository(db)
+    zone = await zone_repo.get_zone(alert.zone_id)
+    zone_name = zone.name if zone else str(alert.zone_id)
+    background_tasks.add_task(
+        notification_service.send_alert_notification,
+        str(alert_id),
+        zone_name,
+        alert.severity,
+        [],
+    )
+
+    from app.api.v1.dashboard_ws import broadcast_event
+
+    await broadcast_event(
+        "alert_confirmed",
+        {
+            "alert_id": str(alert_id),
+            "confirmed_by": str(user_id),
+            "confirmed_at": (confirmed.confirmed_at or datetime.now(timezone.utc)).isoformat(),
+        },
     )
 
     return AlertConfirmResponse(
@@ -127,5 +141,21 @@ async def create_alert(
             "graph_path": body.graph_path,
             "triggered_at": datetime.now(timezone.utc),
         }
+    )
+
+    from app.api.v1.dashboard_ws import broadcast_event
+
+    await broadcast_event(
+        "new_alert",
+        {
+            "id": str(alert.id),
+            "zone_id": str(alert.zone_id),
+            "severity": alert.severity,
+            "title": alert.title,
+            "description": alert.description,
+            "graph_path": alert.graph_path,
+            "triggered_at": alert.triggered_at.isoformat(),
+            "is_active": alert.is_active,
+        },
     )
     return alert

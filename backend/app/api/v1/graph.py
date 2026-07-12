@@ -4,7 +4,7 @@ from typing import Dict, Any
 # We need to import from our networkx fallback for the hackathon MVP
 from graph.networkx_fallback import fallback_graph
 
-router = APIRouter(prefix="/api/v1/graph", tags=["Graph"])
+router = APIRouter(prefix="/graph", tags=["Graph"])
 
 @router.get("/zone/{zone_id}/path")
 async def get_visual_lineage(zone_id: str = Path(..., title="The UUID of the zone")):

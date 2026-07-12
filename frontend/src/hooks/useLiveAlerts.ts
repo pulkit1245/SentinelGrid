@@ -35,8 +35,8 @@ export function useLiveAlerts(): UseLiveAlertsResult {
   // Real-time updates via WebSocket
   useEffect(() => {
     const unsubscribe = wsManager.subscribe((msg: WSMessage) => {
-      if (msg.type === 'alert_new') {
-        const newAlert = msg.payload as Alert;
+      if (msg.type === 'new_alert') {
+        const newAlert = msg.payload as unknown as Alert;
         setAlerts(prev => [newAlert, ...prev]);
       } else if (msg.type === 'alert_confirmed') {
         const payload = msg.payload as { alert_id: string; confirmed_by: string; confirmed_at: string };

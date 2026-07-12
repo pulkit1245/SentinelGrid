@@ -1,0 +1,13 @@
+SentinelGrid Historical Incident Reports — Internal Precedent Library
+
+INC-2025-06-08 — Vizag Refinery Compound Gas Event
+Precursor factor: slow, positive trend slope in CO and flammable gases over the preceding 45 minutes before the main alarm. Hot work permit was active in the adjacent zone during degassing operations. Root cause: failure to enforce OISD-STD-105 Section 4.4 15-meter separation rule.
+
+INC-2024-11-12 — Tank Farm Vapor Ignition Near Miss
+Concurrent degassing operation in the adjacent tank created a vapor cloud that migrated toward a hot work zone. Gas sensors showed gradual LEL increase from 0% to 12% over 30 minutes. Corrective action: revoked hot work permit and purged zone.
+
+INC-2024-08-03 — Pump Room Mechanical-Gas Compound Alert
+Simultaneous vibration anomaly and gas reading elevation triggered compound risk scoring. Investigation confirmed seal failure on degassing line. Reinforced permit conflict checks between mechanical maintenance and gas zone operations.
+
+INC-2023-05-17 — Confined Tank Entry O2 Deficiency
+Oxygen sensor reading dropped to 18.9% during confined space entry. Entry team evacuated safely. Reinforced DGMS Clause 12 requirements for continuous atmospheric monitoring.

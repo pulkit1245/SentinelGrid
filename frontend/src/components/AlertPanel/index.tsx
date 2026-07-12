@@ -6,7 +6,7 @@ import { api } from '../../services/api'
 import { useAuth } from '../../hooks/useAuth'
 
 export function AlertPanel({ zoneId, maxHeight = '100%' }: { zoneId?: string, maxHeight?: string }) {
-  const { alerts, refresh } = useAlerts(zoneId)
+  const { alerts, refetch } = useAlerts(zoneId)
   const { currentUser } = useAuth()
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [confirmingAlert, setConfirmingAlert] = useState<any | null>(null)
@@ -34,7 +34,7 @@ export function AlertPanel({ zoneId, maxHeight = '100%' }: { zoneId?: string, ma
     if (!confirmingAlert) return
     await api.confirmAlert(confirmingAlert.id)
     setConfirmingAlert(null)
-    refresh()
+    refetch()
   }
 
   return (

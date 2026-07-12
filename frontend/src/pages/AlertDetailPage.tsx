@@ -11,7 +11,7 @@ export default function AlertDetailPage() {
   const [alert, setAlert] = useState<Alert | null>(null)
   const [loading, setLoading] = useState(true)
   const [confirming, setConfirming] = useState(false)
-  const [report, setReport] = useState<Record<string, unknown> | null>(null)
+  const [reportHtml, setReportHtml] = useState<string | null>(null)
   const [reportLoading, setReportLoading] = useState(false)
   const { currentUser } = useAuth()
 
@@ -36,8 +36,15 @@ export default function AlertDetailPage() {
     if (!alertId) return
     setReportLoading(true)
     try {
-      const r = await api.getComplianceReport(alertId)
-      setReport(r)
+      const html = await api.getComplianceReport(alertId)
+      setReportHtml(html)
+      const blob = new Blob([html], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `compliance-report-${alertId}.html`
+      link.click()
+      URL.revokeObjectURL(url)
     } finally {
       setReportLoading(false)
     }
@@ -143,14 +150,16 @@ export default function AlertDetailPage() {
       )}
 
       {/* Compliance report preview */}
-      {report && (
+      {reportHtml && (
         <div className="card animate-fadeIn">
           <h2 style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', marginBottom: 16 }}>
             Compliance Report Draft
           </h2>
-          <pre style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--color-text-secondary)', overflow: 'auto', whiteSpace: 'pre-wrap' }}>
-            {JSON.stringify(report, null, 2)}
-          </pre>
+          <iframe
+            title="Compliance report preview"
+            srcDoc={reportHtml}
+            style={{ width: '100%', minHeight: 400, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}
+          />
         </div>
       )}
     </div>

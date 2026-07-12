@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,23 +12,30 @@ from app.repositories.sensor_repository import SensorRepository
 from app.schemas.auth_schema import UserInToken
 from app.schemas.sensor_schema import SensorIngestRequest, SensorReadingResponse, SensorResponse
 from app.services.ingestion_service import IngestionService
+from app.utils.ingest_adapters import try_normalize_sensor_ingest
 
 router = APIRouter(prefix="/sensors")
 
 
 @router.post("/ingest", status_code=status.HTTP_202_ACCEPTED)
 async def ingest_sensor_reading(
-    body: SensorIngestRequest,
+    body: dict[str, Any],
     _: None = Depends(verify_service_token),
     db: AsyncSession = Depends(get_db),
 ):
-    """Service-token-authenticated ingestion endpoint for simulator/adapter layer.
-    Validates against shared schema, writes to TimescaleDB, publishes to Redis Stream.
-    """
+    """Service-token-authenticated ingestion for simulator/adapter payloads."""
+    normalized = try_normalize_sensor_ingest(body)
+    if normalized:
+        body = normalized
+    try:
+        payload = SensorIngestRequest.model_validate(body)
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+
     sensor_repo = SensorRepository(db)
     service = IngestionService(sensor_repo)
     try:
-        result = await service.ingest_sensor_reading(body)
+        result = await service.ingest_sensor_reading(payload)
         return result
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
