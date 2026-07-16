@@ -4,9 +4,9 @@ pydantic==2.5.3
 pydantic-settings==2.1.0
 networkx==3.2.1
 qdrant-client==1.7.3
-langchain==0.1.0
-langchain-core==0.1.10
-langgraph==0.0.26
+langchain
+langchain-core
+langgraph
 sentence-transformers==2.2.2
 neo4j==5.16.0
 sqlalchemy==2.0.25

@@ -109,8 +109,8 @@ async def query_rag(request: RagRequest):
 
     from rag.prompts.answer_prompt import build_prompt
 
-    candidates = retriever.search(request.question, top_k=8)
-    top_3 = reranker.rerank(request.question, candidates, top_k=3)
+    candidates = retriever.search(request.question, top_k=3)
+    top_3 = candidates
 
     if not top_3:
         return {"answer": "I cannot answer based on verified data", "citations": [], "confidence": 0.0}
