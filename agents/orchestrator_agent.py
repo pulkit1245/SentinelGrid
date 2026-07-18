@@ -78,7 +78,13 @@ class OrchestratorAgent:
                  incident_rag_agent: Optional["IncidentRagAgent"] = None,
                  compliance_audit_agent: Optional["ComplianceAuditAgent"] = None,
                  alert_service: Optional[Callable[[AlertDecision], None]] = None,
-                 min_corroborating_signals: int = MIN_CORROBORATING_SIGNALS):
+                 min_corroborating_signals: int = MIN_CORROBORATING_SIGNALS,
+                 black_box_recorder=None):
+        """
+        black_box_recorder: optional agents.black_box_recorder.BlackBoxRecorder.
+        If given, every run_zone() call is logged for later replay/scrubbing --
+        see agents/black_box_recorder.py and agents/agent_transcript.py.
+        """
         self.bb = blackboard
         self.compound_risk_agent = compound_risk_agent or CompoundRiskAgent(blackboard)
         self.permit_intelligence_agent = permit_intelligence_agent or PermitIntelligenceAgent(blackboard)
@@ -86,6 +92,7 @@ class OrchestratorAgent:
         self.compliance_audit_agent = compliance_audit_agent or (ComplianceAuditAgent() if ComplianceAuditAgent else None)
         self.alert_service = alert_service
         self.min_corroborating_signals = min_corroborating_signals
+        self.black_box_recorder = black_box_recorder
         self.graph = self._build_graph()
 
     def _build_graph_path(self, state: OrchestratorState) -> list:
@@ -140,6 +147,7 @@ class OrchestratorAgent:
         return path
 
     # ---- LangGraph nodes ----
+
 
     def _hard_rules_node(self, state: OrchestratorState) -> OrchestratorState:
         snap = self.bb.snapshot(state["zone_id"])
@@ -241,8 +249,11 @@ class OrchestratorAgent:
 
     # ---- public entrypoints ----
 
-    def run_zone(self, zone_id: str) -> OrchestratorState:
-        return self.graph.invoke({"zone_id": zone_id})
+    def run_zone(self, zone_id: str, sim_time_s: float = 0.0) -> OrchestratorState:
+        state = self.graph.invoke({"zone_id": zone_id})
+        if self.black_box_recorder is not None:
+            self.black_box_recorder.record(sim_time_s, state)
+        return state
 
-    def run_all(self) -> List[OrchestratorState]:
-        return [self.run_zone(zone_id) for zone_id in self.bb.all_zone_ids()]
+    def run_all(self, sim_time_s: float = 0.0) -> List[OrchestratorState]:
+        return [self.run_zone(zone_id, sim_time_s=sim_time_s) for zone_id in self.bb.all_zone_ids()]
