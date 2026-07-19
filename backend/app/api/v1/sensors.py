@@ -36,6 +36,19 @@ async def ingest_sensor_reading(
     service = IngestionService(sensor_repo)
     try:
         result = await service.ingest_sensor_reading(payload)
+
+        # Broadcast to all connected dashboard clients for real-time sensor map
+        import asyncio
+        from app.api.v1.dashboard_ws import broadcast_event
+        asyncio.create_task(
+            broadcast_event("sensor_update", {
+                "zone_id":     payload.zone_id,
+                "sensor_type": payload.sensor_type,
+                "value":       payload.value,
+                "unit":        payload.unit,
+            })
+        )
+
         return result
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))

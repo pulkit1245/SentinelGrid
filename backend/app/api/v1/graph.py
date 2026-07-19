@@ -1,27 +1,32 @@
+"""
+graph.py — stub route for zone causal graph path.
+Returns a mock graph payload for the MVP cockpit dashboard.
+"""
 from fastapi import APIRouter, HTTPException, Path
-from typing import Dict, Any
-
-# We need to import from our networkx fallback for the hackathon MVP
-from graph.networkx_fallback import fallback_graph
 
 router = APIRouter(prefix="/graph", tags=["Graph"])
+
 
 @router.get("/zone/{zone_id}/path")
 async def get_visual_lineage(zone_id: str = Path(..., title="The UUID of the zone")):
     """
-    Extracts the overlapping nodes (Permit, Sensor, Shift, Worker) responsible for an active alert.
-    Transforms raw graph sub-networks into readable JSON payloads for the frontend cockpit dashboard.
+    Returns causal graph data (nodes + edges) for an active alert in a zone.
+    MVP stub: returns a sample graph structure.
     """
-    try:
-        # Query the networkx fallback client for the path around this zone
-        payload = fallback_graph.get_path_for_alert(zone_id)
-        
-        if not payload or not payload.get("nodes"):
-            raise HTTPException(status_code=404, detail="Zone not found in graph or has no relationships.")
-            
-        return {
-            "status": "success",
-            "data": payload
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # Minimal stub — replace with real Neo4j / networkx call in production
+    return {
+        "status": "success",
+        "data": {
+            "zone_id": zone_id,
+            "nodes": [
+                {"id": zone_id, "label": "Zone", "type": "zone"},
+                {"id": f"sensor-{zone_id}-1", "label": "Gas Sensor", "type": "sensor"},
+                {"id": f"worker-{zone_id}-1", "label": "Shift Worker", "type": "worker"},
+            ],
+            "edges": [
+                {"source": f"sensor-{zone_id}-1", "target": zone_id, "label": "feeds"},
+                {"source": f"worker-{zone_id}-1", "target": zone_id, "label": "assigned"},
+            ],
+        },
+    }
+

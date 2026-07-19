@@ -19,6 +19,7 @@ export default defineConfig({
         target: process.env.VITE_WS_URL || 'ws://localhost:8000',
         ws: true,
         changeOrigin: true,
+        // No rewrite — backend WS endpoint is at /ws/dashboard (no /api/v1 prefix)
       },
     },
   },

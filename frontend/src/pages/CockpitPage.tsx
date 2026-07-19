@@ -13,14 +13,42 @@ export default function CockpitPage() {
   const { alerts, loading: aLoading, confirmAlert } = useAlerts()
   const { currentUser } = useAuth()
   const [wsConnected, setWsConnected] = useState(false)
+  // Live sensor counts from simulator (updated every second)
+  const [liveCritical, setLiveCritical] = useState(0)
+  const [liveWarning, setLiveWarning] = useState(0)
 
-  const criticalCount = alerts.filter(a => a.severity === 'critical' && a.is_active).length
-  const activeAlerts  = alerts.filter(a => a.is_active).length
+  const criticalCount = Math.max(alerts.filter(a => a.severity === 'critical' && a.is_active).length, liveCritical)
+  const activeAlerts  = Math.max(alerts.filter(a => a.is_active).length, liveWarning + liveCritical)
   const avgRisk = zones.length ? Math.round(zones.reduce((s, z) => s + z.current_risk_score, 0) / zones.length) : 0
 
   useEffect(() => {
+    // onConnectionChange fires immediately with current state, then on every change
+    const unsub = wsManager.onConnectionChange(connected => setWsConnected(connected))
+    return unsub
+  }, [])
+
+  // Track live critical/warning sensor counts from simulator
+  useEffect(() => {
     const unsub = wsManager.subscribe(msg => {
-      if (msg.type === 'heartbeat') setWsConnected(true)
+      if (msg.type !== 'simulator_tick') return
+      // simulator_tick fires every 10 ticks with sensor_count — we use zone_health to derive counts
+    })
+    return unsub
+  }, [])
+
+  // Derive live critical/warning counts from incoming sensor_update events
+  const sensorStatusRef = React.useRef<Record<string, string>>({})
+  useEffect(() => {
+    const unsub = wsManager.subscribe(msg => {
+      if (msg.type !== 'sensor_update') return
+      const p = msg.payload as { id?: string; sensor_id?: string; status?: string }
+      const sid = p.id ?? p.sensor_id
+      if (!sid || !p.status) return
+      sensorStatusRef.current[sid] = p.status
+      // Recount
+      const statuses = Object.values(sensorStatusRef.current)
+      setLiveCritical(statuses.filter(s => s === 'critical').length)
+      setLiveWarning(statuses.filter(s => s === 'warning' || s === 'high_risk').length)
     })
     return unsub
   }, [])

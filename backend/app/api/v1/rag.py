@@ -7,7 +7,7 @@ import threading
 
 from fastapi import APIRouter, HTTPException
 from langchain_core.messages import HumanMessage
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel
 
 from app.core.config import settings
@@ -87,11 +87,15 @@ def init_rag_pipeline() -> bool:
 
             api_key = _openai_api_key()
             if api_key:
-                llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, openai_api_key=api_key)
-                logger.info("RAG pipeline initialized with OpenAI LLM")
+                llm = ChatGoogleGenerativeAI(
+                    model="gemini-1.5-flash-8b",
+                    google_api_key=api_key,
+                    temperature=0,
+                )
+                logger.info("RAG pipeline initialized with Gemini 1.5 Flash")
             else:
                 llm = None
-                logger.warning("OPENAI_API_KEY / LLM_API_KEY not set — RAG will use extractive retrieval answers")
+                logger.warning("LLM_API_KEY not set — RAG will use extractive retrieval answers")
             logger.info("RAG retriever and reranker ready")
             return True
         except Exception as e:
@@ -120,16 +124,20 @@ async def query_rag(request: RagRequest):
 
     max_retries = 1
     for _attempt in range(max_retries + 1):
-        prompt = build_prompt(request.question, top_3)
-        response = llm.invoke([HumanMessage(content=prompt)])
-        answer = response.content
+        try:
+            prompt = build_prompt(request.question, top_3)
+            response = llm.invoke([HumanMessage(content=prompt)])
+            answer = response.content
 
-        if citation_guard and citation_guard.verify_citations(answer, top_3):
-            return {
-                "answer": answer,
-                "sources": [chunk["payload"]["document_id"] for chunk in top_3],
-                "citations": _build_citations(top_3),
-                "confidence": 0.85,
-            }
+            if citation_guard and citation_guard.verify_citations(answer, top_3):
+                return {
+                    "answer": answer,
+                    "sources": [chunk["payload"]["document_id"] for chunk in top_3],
+                    "citations": _build_citations(top_3),
+                    "confidence": 0.85,
+                }
+        except Exception as llm_err:
+            logger.warning("LLM call failed (%s) — falling back to extractive answer", llm_err)
+            return _extractive_answer(request.question, top_3)
 
-    return {"answer": "I cannot answer based on verified data (failed citation guard)", "citations": []}
+    return _extractive_answer(request.question, top_3)

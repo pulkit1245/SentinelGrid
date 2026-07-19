@@ -18,7 +18,7 @@ from app.core.logging import configure_logging
 from app.middlewares.error_handler import register_error_handlers
 
 # Import all routers
-from app.api.v1 import auth, zones, sensors, permits, alerts, compliance, rag, graph, dashboard_ws, events
+from app.api.v1 import auth, zones, sensors, permits, alerts, compliance, rag, graph, dashboard_ws, events, simulator_bridge
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +71,7 @@ def create_app() -> FastAPI:
     app.include_router(rag.router, prefix=prefix, tags=["rag"])
     app.include_router(graph.router, prefix=prefix, tags=["graph"])
     app.include_router(events.router, prefix=prefix, tags=["events"])
+    app.include_router(simulator_bridge.router, prefix=prefix, tags=["simulator-bridge"])
     app.include_router(dashboard_ws.router, tags=["websocket"])
 
     # ── Health Check ───────────────────────────────────────────────────────────

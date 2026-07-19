@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # ── Database ──────────────────────────────────────────────────────────────
-    DATABASE_URL: str = "postgresql+asyncpg://sentinelgrid:password@localhost:5432/sentinelgrid"
-    DATABASE_SYNC_URL: str = "postgresql://sentinelgrid:password@localhost:5432/sentinelgrid"
+    DATABASE_URL: str = "postgresql+asyncpg://sentinelgrid:password@localhost:5433/sentinelgrid"
+    DATABASE_SYNC_URL: str = "postgresql://sentinelgrid:password@localhost:5433/sentinelgrid"
 
     # ── Redis ─────────────────────────────────────────────────────────────────
     REDIS_URL: str = "redis://localhost:6379"
@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str = ""
     TWILIO_AUTH_TOKEN: str = ""
     TWILIO_FROM_NUMBER: str = ""
+    ALERT_PHONE_NUMBERS: List[str] = []   # comma-separated in .env
 
     # ── Mapbox ────────────────────────────────────────────────────────────────
     MAPBOX_TOKEN: str = ""

@@ -1,0 +1,50 @@
+[
+  {
+    "zone_id": "zone-01-degassing",
+    "zone_name": "Degassing Bay",
+    "hazard_class": "Class A - Flammable Gas",
+    "center_x": 200,
+    "center_y": 180,
+    "description": "Primary degassing operations area — high gas leak risk"
+  },
+  {
+    "zone_id": "zone-02-castfloor",
+    "zone_name": "Cast Floor",
+    "hazard_class": "Class B - High Temperature",
+    "center_x": 580,
+    "center_y": 180,
+    "description": "Metal casting and molding operations — high temperature and vibration"
+  },
+  {
+    "zone_id": "zone-03-tankfarm",
+    "zone_name": "Tank Farm",
+    "hazard_class": "Class A - Flammable Liquid Storage",
+    "center_x": 980,
+    "center_y": 180,
+    "description": "Bulk chemical and fuel storage — pressure and gas monitoring critical"
+  },
+  {
+    "zone_id": "zone-04-loadingdock",
+    "zone_name": "Loading Dock",
+    "hazard_class": "Class C - General Industrial",
+    "center_x": 200,
+    "center_y": 570,
+    "description": "Material loading and unloading — flood and vibration risk"
+  },
+  {
+    "zone_id": "zone-05-compressor",
+    "zone_name": "Compressor House",
+    "hazard_class": "Class B - High Pressure",
+    "center_x": 580,
+    "center_y": 570,
+    "description": "Air and gas compressors — pressure spikes and machine overheating risk"
+  },
+  {
+    "zone_id": "zone-06-control",
+    "zone_name": "Control Room",
+    "hazard_class": "Class D - Critical Infrastructure",
+    "center_x": 980,
+    "center_y": 570,
+    "description": "SCADA and control systems — climate and air quality controlled"
+  }
+]

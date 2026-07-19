@@ -22,9 +22,10 @@ class ConnectionManager:
         self._connections: set[WebSocket] = set()
 
     async def connect(self, ws: WebSocket) -> None:
-        await ws.accept()
+        # ws is already accepted by the endpoint before calling connect()
         self._connections.add(ws)
-        logger.info("WS client connected", extra={"total": len(self._connections)})
+        logger.info("WS client connected (total=%d)", len(self._connections))
+
 
     def disconnect(self, ws: WebSocket) -> None:
         self._connections.discard(ws)
@@ -80,16 +81,22 @@ async def dashboard_ws(websocket: WebSocket, token: str = ""):
     Closes with 4401 if token is invalid.
     Broadcasts: zone_risk_update | new_alert | alert_confirmed | permit_created | permit_revoked | cv_event | heartbeat
     """
-    # Validate JWT from query param
+    # ── Accept first so browser gets 101 Switching Protocols ─────────────────
+    # Validating BEFORE accept() causes Starlette to return HTTP 403, which
+    # browsers treat as a hard rejection and stop reconnecting.
+    await websocket.accept()
+
+    # ── Validate JWT from query param ─────────────────────────────────────────
     try:
         user = await get_ws_user_from_token(token)
-    except Exception:
+    except Exception as exc:
+        logger.warning("WS auth failed: %s", exc)
         await websocket.close(code=4401, reason="Unauthorized")
         return
 
     await manager.connect(websocket)
 
-    # Send initial welcome message
+    # Send initial welcome/heartbeat
     await manager.send_personal(
         websocket,
         {
@@ -106,11 +113,8 @@ async def dashboard_ws(websocket: WebSocket, token: str = ""):
 
     try:
         while True:
-            # Keep connection alive; agents/services call broadcast() directly
             data = await websocket.receive_text()
-            # Clients may send ping messages — just echo back
             if data == "ping":
-                from datetime import datetime, timezone
                 await manager.send_personal(
                     websocket,
                     {
@@ -124,6 +128,7 @@ async def dashboard_ws(websocket: WebSocket, token: str = ""):
     finally:
         heartbeat_task.cancel()
         manager.disconnect(websocket)
+
 
 
 async def broadcast_event(event_type: str, payload: dict[str, Any]) -> None:

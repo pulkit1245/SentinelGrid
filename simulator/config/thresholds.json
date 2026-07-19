@@ -1,0 +1,153 @@
+{
+  "sensor_types": {
+    "gas": {
+      "warning_threshold": 15,
+      "high_threshold": 20,
+      "critical_threshold": 25,
+      "noise_std": 0.4,
+      "theta": 0.08,
+      "unit": "ppm"
+    },
+    "temperature": {
+      "warning_threshold": 60,
+      "high_threshold": 70,
+      "critical_threshold": 80,
+      "noise_std": 0.3,
+      "theta": 0.05,
+      "unit": "C"
+    },
+    "smoke": {
+      "warning_threshold": 20,
+      "high_threshold": 35,
+      "critical_threshold": 50,
+      "noise_std": 0.15,
+      "theta": 0.12,
+      "unit": "ppm"
+    },
+    "pressure": {
+      "warning_threshold": 300,
+      "high_threshold": 360,
+      "critical_threshold": 400,
+      "noise_std": 1.5,
+      "theta": 0.06,
+      "unit": "kPa"
+    },
+    "vibration": {
+      "warning_threshold": 4.5,
+      "high_threshold": 6.0,
+      "critical_threshold": 7.1,
+      "noise_std": 0.08,
+      "theta": 0.1,
+      "unit": "mm/s"
+    },
+    "humidity": {
+      "warning_threshold": 75,
+      "high_threshold": 82,
+      "critical_threshold": 90,
+      "noise_std": 0.5,
+      "theta": 0.04,
+      "unit": "%"
+    },
+    "water_level": {
+      "warning_threshold": 50,
+      "high_threshold": 75,
+      "critical_threshold": 100,
+      "noise_std": 0.8,
+      "theta": 0.06,
+      "unit": "mm"
+    }
+  },
+  "incidents": {
+    "gas_leak": {
+      "target_types": ["gas"],
+      "peak_multiplier": 40,
+      "escalation_seconds": 360,
+      "peak_hold_seconds": 120,
+      "recovery_seconds": 600,
+      "auto_trigger_interval_minutes": [4, 8],
+      "auto_trigger_probability": 0.12,
+      "description": "Gradual gas concentration buildup in zone"
+    },
+    "fire": {
+      "target_types": ["temperature", "smoke"],
+      "peak_multiplier_temp": 5.0,
+      "peak_multiplier_smoke": 80.0,
+      "escalation_seconds": 240,
+      "peak_hold_seconds": 90,
+      "recovery_seconds": 900,
+      "auto_trigger_interval_minutes": [6, 12],
+      "auto_trigger_probability": 0.08,
+      "description": "Temperature and smoke escalation from ignition source"
+    },
+    "overheating": {
+      "target_types": ["temperature"],
+      "peak_multiplier": 3.5,
+      "escalation_seconds": 300,
+      "peak_hold_seconds": 180,
+      "recovery_seconds": 480,
+      "auto_trigger_interval_minutes": [4, 7],
+      "auto_trigger_probability": 0.15,
+      "description": "Machine or equipment overheating event"
+    },
+    "pressure_spike": {
+      "target_types": ["pressure"],
+      "peak_multiplier": 1.5,
+      "escalation_seconds": 120,
+      "peak_hold_seconds": 60,
+      "recovery_seconds": 300,
+      "auto_trigger_interval_minutes": [5, 9],
+      "auto_trigger_probability": 0.1,
+      "description": "Sudden pressure spike in pipeline or vessel"
+    },
+    "pressure_drop": {
+      "target_types": ["pressure"],
+      "peak_multiplier": -0.7,
+      "escalation_seconds": 150,
+      "peak_hold_seconds": 60,
+      "recovery_seconds": 360,
+      "auto_trigger_interval_minutes": [5, 10],
+      "auto_trigger_probability": 0.08,
+      "description": "Pressure loss indicating potential rupture or leak"
+    },
+    "vibration": {
+      "target_types": ["vibration"],
+      "peak_multiplier": 8.0,
+      "escalation_seconds": 180,
+      "peak_hold_seconds": 120,
+      "recovery_seconds": 360,
+      "auto_trigger_interval_minutes": [3, 6],
+      "auto_trigger_probability": 0.18,
+      "description": "Excessive machine vibration from mechanical fault"
+    },
+    "flood": {
+      "target_types": ["water_level", "humidity"],
+      "peak_multiplier_water": 20.0,
+      "peak_multiplier_humidity": 1.7,
+      "escalation_seconds": 480,
+      "peak_hold_seconds": 300,
+      "recovery_seconds": 1200,
+      "auto_trigger_interval_minutes": [8, 15],
+      "auto_trigger_probability": 0.05,
+      "description": "Water ingress or flooding event"
+    },
+    "sensor_offline": {
+      "target_types": ["*"],
+      "escalation_seconds": 5,
+      "peak_hold_seconds": 60,
+      "recovery_seconds": 30,
+      "auto_trigger_interval_minutes": [2, 5],
+      "auto_trigger_probability": 0.2,
+      "description": "Sensor communication failure or power loss"
+    },
+    "smoke": {
+      "target_types": ["smoke"],
+      "peak_multiplier": 60.0,
+      "escalation_seconds": 180,
+      "peak_hold_seconds": 90,
+      "recovery_seconds": 420,
+      "auto_trigger_interval_minutes": [5, 9],
+      "auto_trigger_probability": 0.1,
+      "description": "Smoke detection without full fire event"
+    }
+  }
+}

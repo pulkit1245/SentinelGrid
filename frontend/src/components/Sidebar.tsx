@@ -1,14 +1,15 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Shield, LayoutDashboard, AlertTriangle, ClipboardList, MessageSquare, LogOut, User, Settings } from 'lucide-react'
+import { Shield, LayoutDashboard, AlertTriangle, ClipboardList, MessageSquare, LogOut, User, Settings, Map } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: <LayoutDashboard size={16} />, label: 'Dashboard' },
-  { to: '/alerts', icon: <AlertTriangle size={16} />, label: 'Alerts' },
-  { to: '/compliance', icon: <ClipboardList size={16} />, label: 'Compliance' },
-  { to: '/rag', icon: <MessageSquare size={16} />, label: 'RAG Assistant' },
-  { to: '/settings', icon: <Settings size={16} />, label: 'Settings' },
+  { to: '/dashboard',  icon: <LayoutDashboard size={16} />, label: 'Dashboard' },
+  { to: '/sensor-map', icon: <Map size={16} />,             label: 'Sensor Map' },
+  { to: '/alerts',     icon: <AlertTriangle size={16} />,   label: 'Alerts' },
+  { to: '/compliance', icon: <ClipboardList size={16} />,   label: 'Compliance' },
+  { to: '/rag',        icon: <MessageSquare size={16} />,   label: 'RAG Assistant' },
+  { to: '/settings',   icon: <Settings size={16} />,        label: 'Settings' },
 ]
 
 export function Sidebar() {

@@ -20,11 +20,56 @@ export interface Sensor {
   id: string
   zone_id: string
   name: string
-  sensor_type: 'gas' | 'temperature' | 'pressure' | 'vibration'
+  sensor_type: 'gas' | 'temperature' | 'pressure' | 'vibration' | 'smoke' | 'humidity' | 'water_level'
   unit: string
   is_active: boolean
   statutory_threshold?: number
   warning_threshold?: number
+}
+
+export type SensorStatus = 'healthy' | 'warning' | 'high_risk' | 'critical' | 'offline'
+
+export interface SensorMarker {
+  id: string
+  zone_id: string
+  zone_name: string
+  name: string
+  sensor_type: 'gas' | 'temperature' | 'pressure' | 'vibration' | 'smoke' | 'humidity' | 'water_level'
+  unit: string
+  x: number
+  y: number
+  current_value: number
+  threshold_warning: number
+  threshold_critical: number
+  status: SensorStatus
+  last_updated: string
+  battery_level: number    // simulated 0-100
+  signal_strength: number  // simulated 0-100
+}
+
+export interface ZoneRisk {
+  zone_id: string
+  zone_name: string
+  risk_level: SensorStatus
+  sensor_count: number
+  healthy: number
+  warning: number
+  high_risk: number
+  critical: number
+  offline: number
+  aggregate_score: number  // 0-100
+}
+
+export interface SensorIncident {
+  id: string
+  sensor_id: string
+  sensor_name: string
+  zone_name: string
+  old_status: SensorStatus
+  new_status: SensorStatus
+  value: number
+  unit: string
+  timestamp: string
 }
 
 export interface SensorReading {
@@ -86,7 +131,8 @@ export interface User {
 }
 
 export interface WSMessage {
-  type: 'zone_risk_update' | 'new_alert' | 'alert_confirmed' | 'permit_created' | 'permit_revoked' | 'cv_event' | 'heartbeat' | 'pong'
+  type: 'zone_risk_update' | 'new_alert' | 'alert_confirmed' | 'permit_created' | 'permit_revoked' |
+        'cv_event' | 'heartbeat' | 'pong' | 'sensor_update' | 'zone_health_update' | 'simulator_tick'
   timestamp: string
   payload: Record<string, unknown>
 }

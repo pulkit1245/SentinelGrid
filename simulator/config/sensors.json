@@ -1,0 +1,169 @@
+[
+  {
+    "id": "sg-01-gas-1",   "zone_id": "zone-01-degassing", "zone_name": "Degassing Bay",    "name": "Gas Sensor A1",       "sensor_type": "gas",
+    "x":  80, "y":  90, "base_value": 8.0,   "noise_std": 0.4,  "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 92, "signal_base": 88
+  },
+  {
+    "id": "sg-01-gas-2",   "zone_id": "zone-01-degassing", "zone_name": "Degassing Bay",    "name": "Gas Sensor A2",       "sensor_type": "gas",
+    "x": 220, "y": 130, "base_value": 8.5,   "noise_std": 0.4,  "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 85, "signal_base": 91
+  },
+  {
+    "id": "sg-01-temp-1",  "zone_id": "zone-01-degassing", "zone_name": "Degassing Bay",    "name": "Temp Sensor A1",      "sensor_type": "temperature",
+    "x": 330, "y":  70, "base_value": 34.0,  "noise_std": 0.3,  "unit": "C",
+    "threshold_warning": 60,  "threshold_high": 70,  "threshold_critical": 80,
+    "battery_base": 78, "signal_base": 95
+  },
+  {
+    "id": "sg-01-pres-1",  "zone_id": "zone-01-degassing", "zone_name": "Degassing Bay",    "name": "Pressure Sensor A1",  "sensor_type": "pressure",
+    "x": 100, "y": 280, "base_value": 101.3, "noise_std": 1.5,  "unit": "kPa",
+    "threshold_warning": 300, "threshold_high": 360, "threshold_critical": 400,
+    "battery_base": 96, "signal_base": 82
+  },
+  {
+    "id": "sg-01-vib-1",   "zone_id": "zone-01-degassing", "zone_name": "Degassing Bay",    "name": "Vibration Sensor A1", "sensor_type": "vibration",
+    "x": 290, "y": 290, "base_value": 1.1,   "noise_std": 0.08, "unit": "mm/s",
+    "threshold_warning": 4.5, "threshold_high": 6.0, "threshold_critical": 7.1,
+    "battery_base": 88, "signal_base": 76
+  },
+
+  {
+    "id": "sg-02-temp-1",  "zone_id": "zone-02-castfloor", "zone_name": "Cast Floor",       "name": "Temp Sensor B1",      "sensor_type": "temperature",
+    "x": 470, "y":  80, "base_value": 55.0,  "noise_std": 0.5,  "unit": "C",
+    "threshold_warning": 60,  "threshold_high": 70,  "threshold_critical": 80,
+    "battery_base": 71, "signal_base": 84
+  },
+  {
+    "id": "sg-02-temp-2",  "zone_id": "zone-02-castfloor", "zone_name": "Cast Floor",       "name": "Temp Sensor B2",      "sensor_type": "temperature",
+    "x": 650, "y": 150, "base_value": 58.0,  "noise_std": 0.5,  "unit": "C",
+    "threshold_warning": 60,  "threshold_high": 70,  "threshold_critical": 80,
+    "battery_base": 65, "signal_base": 79
+  },
+  {
+    "id": "sg-02-gas-1",   "zone_id": "zone-02-castfloor", "zone_name": "Cast Floor",       "name": "Gas Sensor B1",       "sensor_type": "gas",
+    "x": 540, "y": 250, "base_value": 2.0,   "noise_std": 0.3,  "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 90, "signal_base": 93
+  },
+  {
+    "id": "sg-02-vib-1",   "zone_id": "zone-02-castfloor", "zone_name": "Cast Floor",       "name": "Vibration Sensor B1", "sensor_type": "vibration",
+    "x": 730, "y": 290, "base_value": 3.2,   "noise_std": 0.1,  "unit": "mm/s",
+    "threshold_warning": 4.5, "threshold_high": 6.0, "threshold_critical": 7.1,
+    "battery_base": 83, "signal_base": 87
+  },
+  {
+    "id": "sg-02-smoke-1", "zone_id": "zone-02-castfloor", "zone_name": "Cast Floor",       "name": "Smoke Detector B1",   "sensor_type": "smoke",
+    "x": 460, "y": 310, "base_value": 0.5,   "noise_std": 0.12, "unit": "ppm",
+    "threshold_warning": 20,  "threshold_high": 35,  "threshold_critical": 50,
+    "battery_base": 97, "signal_base": 91
+  },
+
+  {
+    "id": "sg-03-gas-1",   "zone_id": "zone-03-tankfarm",  "zone_name": "Tank Farm",        "name": "Gas Sensor C1",       "sensor_type": "gas",
+    "x": 850, "y":  80, "base_value": 5.0,   "noise_std": 0.35, "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 74, "signal_base": 80
+  },
+  {
+    "id": "sg-03-gas-2",   "zone_id": "zone-03-tankfarm",  "zone_name": "Tank Farm",        "name": "Gas Sensor C2",       "sensor_type": "gas",
+    "x": 1050,"y": 130, "base_value": 5.5,   "noise_std": 0.35, "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 86, "signal_base": 77
+  },
+  {
+    "id": "sg-03-pres-1",  "zone_id": "zone-03-tankfarm",  "zone_name": "Tank Farm",        "name": "Pressure Sensor C1",  "sensor_type": "pressure",
+    "x": 920, "y": 200, "base_value": 250.0, "noise_std": 2.0,  "unit": "kPa",
+    "threshold_warning": 300, "threshold_high": 360, "threshold_critical": 400,
+    "battery_base": 91, "signal_base": 89
+  },
+  {
+    "id": "sg-03-pres-2",  "zone_id": "zone-03-tankfarm",  "zone_name": "Tank Farm",        "name": "Pressure Sensor C2",  "sensor_type": "pressure",
+    "x": 1130,"y": 270, "base_value": 252.0, "noise_std": 2.0,  "unit": "kPa",
+    "threshold_warning": 300, "threshold_high": 360, "threshold_critical": 400,
+    "battery_base": 69, "signal_base": 72
+  },
+  {
+    "id": "sg-03-hum-1",   "zone_id": "zone-03-tankfarm",  "zone_name": "Tank Farm",        "name": "Humidity Sensor C1",  "sensor_type": "humidity",
+    "x": 800, "y": 290, "base_value": 55.0,  "noise_std": 0.5,  "unit": "%",
+    "threshold_warning": 75,  "threshold_high": 82,  "threshold_critical": 90,
+    "battery_base": 82, "signal_base": 85
+  },
+
+  {
+    "id": "sg-04-gas-1",   "zone_id": "zone-04-loadingdock","zone_name": "Loading Dock",    "name": "Gas Sensor D1",       "sensor_type": "gas",
+    "x":  80, "y": 430, "base_value": 3.0,   "noise_std": 0.3,  "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 93, "signal_base": 90
+  },
+  {
+    "id": "sg-04-temp-1",  "zone_id": "zone-04-loadingdock","zone_name": "Loading Dock",    "name": "Temp Sensor D1",      "sensor_type": "temperature",
+    "x": 260, "y": 480, "base_value": 26.0,  "noise_std": 0.3,  "unit": "C",
+    "threshold_warning": 60,  "threshold_high": 70,  "threshold_critical": 80,
+    "battery_base": 77, "signal_base": 83
+  },
+  {
+    "id": "sg-04-vib-1",   "zone_id": "zone-04-loadingdock","zone_name": "Loading Dock",    "name": "Vibration Sensor D1", "sensor_type": "vibration",
+    "x": 130, "y": 650, "base_value": 1.8,   "noise_std": 0.08, "unit": "mm/s",
+    "threshold_warning": 4.5, "threshold_high": 6.0, "threshold_critical": 7.1,
+    "battery_base": 88, "signal_base": 76
+  },
+  {
+    "id": "sg-04-water-1", "zone_id": "zone-04-loadingdock","zone_name": "Loading Dock",    "name": "Water Level D1",      "sensor_type": "water_level",
+    "x": 330, "y": 720, "base_value": 10.0,  "noise_std": 0.8,  "unit": "mm",
+    "threshold_warning": 50,  "threshold_high": 75,  "threshold_critical": 100,
+    "battery_base": 95, "signal_base": 88
+  },
+
+  {
+    "id": "sg-05-pres-1",  "zone_id": "zone-05-compressor", "zone_name": "Compressor House","name": "Pressure Sensor E1",  "sensor_type": "pressure",
+    "x": 460, "y": 440, "base_value": 310.0, "noise_std": 2.5,  "unit": "kPa",
+    "threshold_warning": 350, "threshold_high": 380, "threshold_critical": 400,
+    "battery_base": 80, "signal_base": 86
+  },
+  {
+    "id": "sg-05-pres-2",  "zone_id": "zone-05-compressor", "zone_name": "Compressor House","name": "Pressure Sensor E2",  "sensor_type": "pressure",
+    "x": 650, "y": 500, "base_value": 315.0, "noise_std": 2.5,  "unit": "kPa",
+    "threshold_warning": 350, "threshold_high": 380, "threshold_critical": 400,
+    "battery_base": 72, "signal_base": 81
+  },
+  {
+    "id": "sg-05-temp-1",  "zone_id": "zone-05-compressor", "zone_name": "Compressor House","name": "Temp Sensor E1",      "sensor_type": "temperature",
+    "x": 520, "y": 620, "base_value": 42.0,  "noise_std": 0.4,  "unit": "C",
+    "threshold_warning": 60,  "threshold_high": 70,  "threshold_critical": 80,
+    "battery_base": 87, "signal_base": 92
+  },
+  {
+    "id": "sg-05-vib-1",   "zone_id": "zone-05-compressor", "zone_name": "Compressor House","name": "Vibration Sensor E1", "sensor_type": "vibration",
+    "x": 700, "y": 700, "base_value": 4.1,   "noise_std": 0.12, "unit": "mm/s",
+    "threshold_warning": 4.5, "threshold_high": 6.0, "threshold_critical": 7.1,
+    "battery_base": 64, "signal_base": 74
+  },
+  {
+    "id": "sg-05-smoke-1", "zone_id": "zone-05-compressor", "zone_name": "Compressor House","name": "Smoke Detector E1",   "sensor_type": "smoke",
+    "x": 430, "y": 750, "base_value": 1.2,   "noise_std": 0.12, "unit": "ppm",
+    "threshold_warning": 20,  "threshold_high": 35,  "threshold_critical": 50,
+    "battery_base": 98, "signal_base": 94
+  },
+
+  {
+    "id": "sg-06-gas-1",   "zone_id": "zone-06-control",    "zone_name": "Control Room",    "name": "Gas Sensor F1",       "sensor_type": "gas",
+    "x": 860, "y": 430, "base_value": 0.5,   "noise_std": 0.08, "unit": "ppm",
+    "threshold_warning": 15,  "threshold_high": 20,  "threshold_critical": 25,
+    "battery_base": 99, "signal_base": 99
+  },
+  {
+    "id": "sg-06-temp-1",  "zone_id": "zone-06-control",    "zone_name": "Control Room",    "name": "Temp Sensor F1",      "sensor_type": "temperature",
+    "x": 1050,"y": 470, "base_value": 22.0,  "noise_std": 0.2,  "unit": "C",
+    "threshold_warning": 35,  "threshold_high": 40,  "threshold_critical": 45,
+    "battery_base": 97, "signal_base": 99
+  },
+  {
+    "id": "sg-06-hum-1",   "zone_id": "zone-06-control",    "zone_name": "Control Room",    "name": "Humidity Sensor F1",  "sensor_type": "humidity",
+    "x": 950, "y": 620, "base_value": 45.0,  "noise_std": 0.4,  "unit": "%",
+    "threshold_warning": 70,  "threshold_high": 77,  "threshold_critical": 85,
+    "battery_base": 96, "signal_base": 98
+  }
+]

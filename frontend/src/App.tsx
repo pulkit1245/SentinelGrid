@@ -12,6 +12,7 @@ import AlertsPage from './pages/AlertsPage'
 import RAGPage from './pages/RAGPage'
 import CompliancePage from './pages/CompliancePage'
 import SettingsPage from './pages/SettingsPage'
+import SensorMapPage from './pages/SensorMapPage'
 
 function AppRoutes() {
   const { accessToken } = useAuthContext()
@@ -37,6 +38,7 @@ function AppRoutes() {
         <Route path="/rag" element={<RAGPage />} />
         <Route path="/compliance" element={<CompliancePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/sensor-map" element={<SensorMapPage />} />
       </Route>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
