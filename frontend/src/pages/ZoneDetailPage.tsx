@@ -7,6 +7,7 @@ import { useAlerts } from '../hooks/useAlerts'
 import { AlertFeed } from '../components/AlertFeed'
 import { useAuth } from '../hooks/useAuth'
 import { PermitBadge } from '../components/PermitBadge'
+import { RiskExplanation } from '../components/RiskExplanation'
 
 export default function ZoneDetailPage() {
   const { zoneId } = useParams<{ zoneId: string }>()
@@ -66,6 +67,9 @@ export default function ZoneDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* AI Risk Explanation */}
+      <RiskExplanation zone={zone} permits={permits} alerts={alerts} />
 
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14 }}>

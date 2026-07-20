@@ -18,7 +18,7 @@ from app.core.logging import configure_logging
 from app.middlewares.error_handler import register_error_handlers
 
 # Import all routers
-from app.api.v1 import auth, zones, sensors, permits, alerts, compliance, rag, graph, dashboard_ws, events, simulator_bridge
+from app.api.v1 import auth, zones, sensors, permits, alerts, compliance, rag, graph, dashboard_ws, events, simulator_bridge, risk_explain
 
 logger = logging.getLogger(__name__)
 
@@ -73,6 +73,7 @@ def create_app() -> FastAPI:
     app.include_router(events.router, prefix=prefix, tags=["events"])
     app.include_router(simulator_bridge.router, prefix=prefix, tags=["simulator-bridge"])
     app.include_router(dashboard_ws.router, tags=["websocket"])
+    app.include_router(risk_explain.router, prefix=prefix, tags=["risk-explain"])
 
     # ── Health Check ───────────────────────────────────────────────────────────
     @app.get("/health", tags=["health"])

@@ -1,0 +1,29 @@
+# docker-compose.override.yml
+# ─────────────────────────────────────────────────────────────────────────────
+# Drop-in override for infra/docker-compose.yml.
+# Place this file at the ROOT of the project (next to the infra/ folder).
+#
+# Usage:
+#   docker-compose -f infra/docker-compose.yml -f docker-compose.override.yml up -d
+#
+# What this does:
+#   1. Points backend/simulator builds at the pinned requirements.docker.txt
+#      to eliminate pip resolver backtracking (langchain version conflicts)
+#   2. Passes LLM_API_KEY into the backend so the AI risk-explain feature works
+#      (set it in a .env file or as an environment variable before running)
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile.docker
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY:-}
+
+  simulator:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile.docker
+    environment:
+      - PYTHONPATH=/app:/app/backend
