@@ -8,6 +8,7 @@ import { AlertFeed } from '../components/AlertFeed'
 import { useAuth } from '../hooks/useAuth'
 import { PermitBadge } from '../components/PermitBadge'
 import { RiskExplanation } from '../components/RiskExplanation'
+import { BlackBoxReplayPanel } from '../components/BlackBox/BlackBoxReplayPanel'
 
 export default function ZoneDetailPage() {
   const { zoneId } = useParams<{ zoneId: string }>()
@@ -70,6 +71,10 @@ export default function ZoneDetailPage() {
 
       {/* AI Risk Explanation */}
       <RiskExplanation zone={zone} permits={permits} alerts={alerts} />
+
+      {/* Black Box Flight Recorder & Agent Debate Replay */}
+      <BlackBoxReplayPanel zoneId={zone.slug || zone.id} />
+
 
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 14 }}>

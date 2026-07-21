@@ -1,4 +1,4 @@
-import type { Alert, Permit, RAGResponse, Zone } from '../types'
+import type { Alert, BlackBoxEntry, AgentTranscriptResponse, Permit, RAGResponse, Zone } from '../types'
 import { authApi } from './auth'
 
 // Initialize from localStorage so API calls work immediately on page reload
@@ -46,6 +46,18 @@ export const api = {
   // ── Zones ──────────────────────────────────────────────────────────────────
   getZones: () => request<{ zones: Zone[]; total: number }>('/zones').then(r => r.zones),
   getZone: (id: string) => request<Zone>(`/zones/${id}`),
+
+  // ── Black Box & Agent Transcript ─────────────────────────────────────────────
+  getBlackBoxTimeline: (zoneId: string) =>
+    request<BlackBoxEntry[]>(`/zones/${zoneId}/black-box`),
+  getBlackBoxStoryBeats: (zoneId: string) =>
+    request<BlackBoxEntry[]>(`/zones/${zoneId}/black-box/changes`),
+  getAgentTranscript: (zoneId: string, simTimeS?: number) =>
+    request<AgentTranscriptResponse>(`/zones/${zoneId}/transcript${simTimeS !== undefined ? `?sim_time_s=${simTimeS}` : ''}`),
+  simulateBlackBoxScenario: (zoneId: string) =>
+    request<{ status: string; zone_id: string; entry_count: number; story_beat_count: number }>(
+      `/zones/${zoneId}/black-box/simulate`, { method: 'POST' }
+    ),
 
   // ── Sensors ────────────────────────────────────────────────────────────────
   getSensorReadings: (sensorId: string, limit = 100) =>
@@ -105,3 +117,4 @@ export const api = {
     return resp.text()
   },
 }
+

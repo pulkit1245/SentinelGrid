@@ -13,6 +13,7 @@ import RAGPage from './pages/RAGPage'
 import CompliancePage from './pages/CompliancePage'
 import SettingsPage from './pages/SettingsPage'
 import SensorMapPage from './pages/SensorMapPage'
+import BlackBoxPage from './pages/BlackBoxPage'
 
 function AppRoutes() {
   const { accessToken } = useAuthContext()
@@ -32,6 +33,7 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<CockpitPage />} />
+        <Route path="/black-box" element={<BlackBoxPage />} />
         <Route path="/zones/:zoneId" element={<ZoneDetailPage />} />
         <Route path="/alerts" element={<AlertsPage />} />
         <Route path="/alerts/:alertId" element={<AlertDetailPage />} />

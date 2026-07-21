@@ -148,3 +148,39 @@ export interface TokenResponse {
   access_token: string
   token_type: string
 }
+
+export interface BlackBoxEntry {
+  sim_time_s: number
+  zone_id: string
+  hard_rule_violation?: {
+    sensor_type: string
+    value: number
+    threshold: number
+  } | null
+  compound_finding_summary?: {
+    triggered: boolean
+    reasons: string[]
+    signal_count: number
+  } | null
+  permit_violations_summary?: Array<{
+    reason: string
+    severity: string
+  }>
+  corroborating_signals: string[]
+  decision: 'critical' | 'advisory' | 'clear'
+  dispatched: boolean
+}
+
+export interface TranscriptLine {
+  speaker: string
+  message: string
+}
+
+export interface AgentTranscriptResponse {
+  zone_id: string
+  sim_time_s?: number | null
+  decision: string
+  transcript: string
+  lines: TranscriptLine[]
+}
+

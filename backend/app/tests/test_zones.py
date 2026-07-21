@@ -10,7 +10,7 @@ from app.models.user import User
 from app.tests.conftest import get_auth_token
 
 
-@pytest_asyncio_fixture_helper = None  # just a marker comment
+# marker comment
 
 
 @pytest.mark.asyncio
